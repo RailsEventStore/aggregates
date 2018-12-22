@@ -1,6 +1,6 @@
+require 'project_management'
 require 'minitest/autorun'
 require 'mutant/minitest/coverage'
-require 'issue'
 
 def assert_events(actual, expected)
   to_compare = ->(ev) { ev.to_h.slice(:type, :data) }
