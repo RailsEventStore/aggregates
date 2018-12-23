@@ -11,6 +11,8 @@ GEM
       abstract_type (~> 0.0.7)
       adamantium (~> 0.2)
       equalizer (~> 0.0.11)
+    arkency-command_bus (0.4.0)
+      thread_safe
     ast (2.4.0)
     concord (0.1.5)
       adamantium (~> 0.2.0)
@@ -31,7 +33,7 @@ GEM
       equalizer (~> 0.0.9)
       ice_nine (~> 0.11.0)
       procto (~> 0.0.2)
-    mutant (0.8.22)
+    mutant (0.8.23)
       abstract_type (~> 0.0.7)
       adamantium (~> 0.2.0)
       anima (~> 0.3.0)
@@ -70,6 +72,7 @@ PLATFORMS
 
 DEPENDENCIES
   aggregate_root
+  arkency-command_bus
   minitest
   mutant-minitest
   ruby_event_store

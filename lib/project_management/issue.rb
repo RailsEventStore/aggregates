@@ -1,3 +1,5 @@
+require 'aggregate_root'
+
 module ProjectManagement
   class Issue
     include AggregateRoot

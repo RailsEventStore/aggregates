@@ -2,164 +2,129 @@ require 'test_helper'
 
 module ProjectManagement
   class IssueTest < MiniTest::Test
-    cover 'Issue*'
+    include TestPlumbing
+    cover 'ProjectManagement::Issue*'
 
     def test_create
-      issue = Issue.new(issue_id)
-      assert_opened(issue.create)
+      assert_opened { act(create_issue) }
     end
 
     def test_close
-      issue = Issue.new(issue_id)
-      assert_invalid_transition { issue.close }
+      assert_error { act(close_issue) }
     end
 
     def test_resolve
-      issue = Issue.new(issue_id)
-      assert_invalid_transition { issue.resolve }
+      assert_error { act(resolve_issue) }
     end
 
     def test_start
-      issue = Issue.new(issue_id)
-      assert_invalid_transition { issue.start }
+      assert_error { act(start_issue_progress) }
     end
 
     def test_stop
-      issue = Issue.new(issue_id)
-      assert_invalid_transition { issue.stop }
+      assert_error { act(stop_issue_progress) }
     end
 
     def test_reopen
-      issue = Issue.new(issue_id)
-      assert_invalid_transition { issue.reopen }
+      assert_error { act(reopen_issue) }
     end
 
     def test_create_from_open
-      issue = Issue.new(issue_id)
-      issue.create
-      assert_invalid_transition { issue.create }
+      arrange(create_issue)
+      assert_error { act(create_issue) }
     end
 
     def test_resolve_from_opened
-      issue = Issue.new(issue_id)
-      issue.create
-      assert_resolved(issue.resolve)
+      arrange(create_issue)
+      assert_resolved { act(resolve_issue) }
     end
 
     def test_resolve_from_in_progress
-      issue = Issue.new(issue_id)
-      issue.create
-      issue.start
-      assert_resolved(issue.resolve)
+      arrange(create_issue, start_issue_progress)
+      assert_resolved { act(resolve_issue) }
     end
 
     def test_resolve_from_reopened
-      issue = Issue.new(issue_id)
-      issue.create
-      issue.close
-      issue.reopen
-      assert_resolved(issue.resolve)
+      arrange(create_issue, close_issue, reopen_issue)
+      assert_resolved { act(resolve_issue) }
     end
 
     def test_resolve_from_resolved
-      issue = Issue.new(issue_id)
-      issue.create
-      issue.resolve
-      assert_invalid_transition { issue.resolve }
+      arrange(create_issue, resolve_issue)
+      assert_error { act(resolve_issue) }
     end
 
     def test_start_from_opened
-      issue = Issue.new(issue_id)
-      issue.create
-      assert_started(issue.start)
+      arrange(create_issue)
+      assert_started { act(start_issue_progress) }
     end
 
     def test_start_from_reopened
-      issue = Issue.new(issue_id)
-      issue.create
-      issue.close
-      issue.reopen
-      assert_started(issue.start)
+      arrange(create_issue, close_issue, reopen_issue)
+      assert_started { act(start_issue_progress) }
     end
 
     def test_start_from_in_progress
-      issue = Issue.new(issue_id)
-      issue.create
-      issue.start
-      assert_invalid_transition { issue.start }
+      arrange(create_issue, start_issue_progress)
+      assert_error { act(start_issue_progress) }
     end
 
     def test_close_from_opened
-      issue = Issue.new(issue_id)
-      issue.create
-      assert_closed(issue.close)
+      arrange(create_issue)
+      assert_closed { act(close_issue) }
     end
 
     def test_close_from_resolved
-      issue = Issue.new(issue_id)
-      issue.create
-      issue.resolve
-      assert_closed(issue.close)
+      arrange(create_issue, resolve_issue)
+      assert_closed { act(close_issue) }
     end
 
     def test_close_from_started
-      issue = Issue.new(issue_id)
-      issue.create
-      issue.start
-      assert_closed(issue.close)
+      arrange(create_issue, start_issue_progress)
+      assert_closed { act(close_issue) }
     end
 
     def test_close_from_reopened
-      issue = Issue.new(issue_id)
-      issue.create
-      issue.close
-      issue.reopen
-      assert_closed(issue.close)
+      arrange(create_issue, close_issue, reopen_issue)
+      assert_closed { act(close_issue) }
     end
 
     def test_close_from_closed
-      issue = Issue.new(issue_id)
-      issue.create
-      issue.close
-      assert_invalid_transition { issue.close }
+      arrange(create_issue, close_issue)
+      assert_error { act(close_issue) }
     end
 
     def test_stop_from_started
-      issue = Issue.new(issue_id)
-      issue.create
-      issue.start
-      assert_stopped(issue.stop)
+      arrange(create_issue, start_issue_progress)
+      assert_stopped { act(stop_issue_progress) }
     end
 
     def test_stop_from_open
-      issue = Issue.new(issue_id)
-      issue.create
-      assert_invalid_transition { issue.stop }
+      arrange(create_issue)
+      assert_error { act(stop_issue_progress) }
     end
 
     def test_reopen_from_closed
-      issue = Issue.new(issue_id)
-      issue.create
-      issue.close
-      assert_reopened(issue.reopen)
+      arrange(create_issue, close_issue)
+      assert_reopened { act(reopen_issue) }
     end
 
     def test_reopen_from_resolved
-      issue = Issue.new(issue_id)
-      issue.create
-      issue.resolve
-      assert_reopened(issue.reopen)
+      arrange(create_issue, resolve_issue)
+      assert_reopened { act(reopen_issue) }
     end
 
     def test_reopen_from_reopened
-      issue = Issue.new(issue_id)
-      issue.create
-      issue.close
-      issue.reopen
-      assert_invalid_transition { issue.reopen }
+      arrange(create_issue, close_issue, reopen_issue)
+      assert_error { act(reopen_issue) }
     end
 
     private
+
+    def setup
+      super
+      Configuration.new.(event_store, command_bus)
+    end
 
     def issue_id
       'c97a6121-f933-4609-9e96-e77dc2f67a16'
@@ -169,34 +134,74 @@ module ProjectManagement
       { issue_id: issue_id }
     end
 
-    def assert_invalid_transition
-      assert_raises Issue::InvalidTransition do
+    def stream_name
+      "Issue$#{issue_id}"
+    end
+
+    def create_issue
+      CreateIssue.new(issue_id)
+    end
+
+    def reopen_issue
+      ReopenIssue.new(issue_id)
+    end
+
+    def close_issue
+      CloseIssue.new(issue_id)
+    end
+
+    def resolve_issue
+      ResolveIssue.new(issue_id)
+    end
+
+    def start_issue_progress
+      StartIssueProgress.new(issue_id)
+    end
+
+    def stop_issue_progress
+      StopIssueProgress.new(issue_id)
+    end
+
+    def assert_error
+      assert_raises(Issue::InvalidTransition) do
         yield
       end
     end
 
-    def assert_opened(applied)
-      assert_events [IssueOpened.new(data: issue_data)], applied
+    def assert_opened
+      assert_events(stream_name, IssueOpened.new(data: issue_data)) do
+        yield
+      end
     end
 
-    def assert_reopened(applied)
-      assert_events [IssueReopened.new(data: issue_data)], applied
+    def assert_reopened
+      assert_events(stream_name, IssueReopened.new(data: issue_data)) do
+        yield
+      end
     end
 
-    def assert_resolved(applied)
-      assert_events [IssueResolved.new(data: issue_data)], applied
+    def assert_resolved
+      assert_events(stream_name, IssueResolved.new(data: issue_data)) do
+        yield
+      end
     end
 
-    def assert_closed(applied)
-      assert_events [IssueClosed.new(data: issue_data)], applied
+    def assert_closed
+      assert_events(stream_name, IssueClosed.new(data: issue_data)) do
+        yield
+      end
     end
 
-    def assert_started(applied)
-      assert_events [IssueProgressStarted.new(data: issue_data)], applied
+    def assert_started
+      assert_events(stream_name, IssueProgressStarted.new(data: issue_data)) do
+        yield
+      end
     end
 
-    def assert_stopped(applied)
-      assert_events [IssueProgressStopped.new(data: issue_data)], applied
+    def assert_stopped
+      assert_events(stream_name, IssueProgressStopped.new(data: issue_data)) do
+        yield
+      end
     end
   end
 end
