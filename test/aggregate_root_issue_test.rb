@@ -1,4 +1,5 @@
 require 'test_helper'
+require_relative '../aggregate_root/project_management'
 
 module ProjectManagement
   class IssueTest < MiniTest::Test

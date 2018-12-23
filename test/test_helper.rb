@@ -1,7 +1,7 @@
 require 'minitest/autorun'
 require 'mutant/minitest/coverage'
 require 'arkency/command_bus'
-require 'project_management'
+require_relative '../lib/project_management'
 
 
 module ProjectManagement

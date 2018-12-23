@@ -1,7 +1,10 @@
-mutate: test
-	bundle exec mutant --include lib --include test --require project_management --use minitest "ProjectManagement*"
+aggregate_root:
+	@bundle exec ruby -Itest test/aggregate_root_issue_test.rb
+	@bundle exec mutant --include test \
+		--include aggregate_root \
+		--require project_management \
+		--use minitest "ProjectManagement*"
 
-test:
-	bundle exec ruby -Ilib -Itest test/issue_test.rb
+test: aggregate_root
 
-.PHONY: test
+.PHONY: test aggregate_root
