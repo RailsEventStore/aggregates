@@ -21,32 +21,32 @@ module ProjectManagement
 
     private
 
-    def apply_opened(state, event)
+    def apply_opened(state, _)
       state.issue.create
       state.version += 1
     end
 
-    def apply_reopened(state, event)
+    def apply_reopened(state, _)
       state.issue.reopen
       state.version += 1
     end
 
-    def apply_closed(state, event)
+    def apply_closed(state, _)
       state.issue.close
       state.version += 1
     end
 
-    def apply_resolved(state, event)
+    def apply_resolved(state, _)
       state.issue.resolve
       state.version += 1
     end
 
-    def apply_progress_started(state, event)
+    def apply_progress_started(state, _)
       state.issue.start
       state.version += 1
     end
 
-    def apply_progress_stopped(state, event)
+    def apply_progress_stopped(state, _)
       state.issue.stop
       state.version += 1
     end

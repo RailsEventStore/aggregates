@@ -29,6 +29,11 @@ module ProjectManagement
       assert_error { act(reopen_issue) }
     end
 
+    def test_start_from_stopped
+      arrange(create_issue, start_issue_progress, stop_issue_progress)
+      assert_started { act(start_issue_progress) }
+    end
+
     def test_create_from_open
       arrange(create_issue)
       assert_error { act(create_issue) }
