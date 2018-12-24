@@ -8,42 +8,42 @@ module ProjectManagement
 
     def create(cmd)
       with_aggregate(cmd.id) do |issue|
-        raise InvalidTransition unless issue.can_create?
+        raise Issue::InvalidTransition unless issue.can_create?
         IssueOpened.new(data: { issue_id: issue.id })
       end
     end
 
     def resolve(cmd)
       with_aggregate(cmd.id) do |issue|
-        raise InvalidTransition unless issue.can_resolve?
+        raise Issue::InvalidTransition unless issue.can_resolve?
         IssueResolved.new(data: { issue_id: issue.id })
       end
     end
 
     def close(cmd)
       with_aggregate(cmd.id) do |issue|
-        raise InvalidTransition unless issue.can_close?
+        raise Issue::InvalidTransition unless issue.can_close?
         IssueClosed.new(data: { issue_id: issue.id })
       end
     end
 
     def reopen(cmd)
       with_aggregate(cmd.id) do |issue|
-        raise InvalidTransition unless issue.can_reopen?
+        raise Issue::InvalidTransition unless issue.can_reopen?
         IssueReopened.new(data: { issue_id: issue.id })
       end
     end
 
     def start(cmd)
       with_aggregate(cmd.id) do |issue|
-        raise InvalidTransition unless issue.can_start?
+        raise Issue::InvalidTransition unless issue.can_start?
         IssueProgressStarted.new(data: { issue_id: issue.id })
       end
     end
 
     def stop(cmd)
       with_aggregate(cmd.id) do |issue|
-        raise InvalidTransition unless issue.can_stop?
+        raise Issue::InvalidTransition unless issue.can_stop?
         IssueProgressStopped.new(data: { issue_id: issue.id })
       end
     end

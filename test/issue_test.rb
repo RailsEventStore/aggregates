@@ -1,5 +1,4 @@
 require 'test_helper'
-require_relative '../eventide/project_management'
 
 module ProjectManagement
   class IssueTest < MiniTest::Test
@@ -164,7 +163,7 @@ module ProjectManagement
     end
 
     def assert_error
-      assert_raises(CommandHandler::InvalidTransition) do
+      assert_raises(Issue::InvalidTransition) do
         yield
       end
     end

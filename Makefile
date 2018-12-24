@@ -1,5 +1,5 @@
 test_aggregate_root:
-	@bundle exec ruby -Itest test/aggregate_root_issue_test.rb
+	@bundle exec ruby -Itest -Iaggregate_root -rproject_management test/issue_test.rb
 
 mutate_aggregate_root:
 	@bundle exec mutant --include test \
@@ -8,7 +8,7 @@ mutate_aggregate_root:
 		--use minitest "ProjectManagement*"
 
 test_query_based:
-	@bundle exec ruby -Itest test/query_based_issue_test.rb
+	@bundle exec ruby -Itest -Iquery_based -rproject_management test/issue_test.rb
 
 mutate_query_based:
 	@bundle exec mutant --include test \

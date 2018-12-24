@@ -1,5 +1,7 @@
 module ProjectManagement
   class Issue
+    InvalidTransition = Class.new(StandardError)
+
     attr_accessor :id
     attr_accessor :status
 
