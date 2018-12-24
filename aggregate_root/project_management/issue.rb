@@ -11,32 +11,32 @@ module ProjectManagement
     end
 
     def create
-      invalid_transition if open?
+      invalid_transition unless can_create?
       apply(IssueOpened.new(data: {issue_id: @id}))
     end
 
     def resolve
-      invalid_transition unless open? || reopened? || in_progress?
+      invalid_transition unless can_resolve?
       apply(IssueResolved.new(data: {issue_id: @id}))
     end
 
     def close
-      invalid_transition unless open? || in_progress? || reopened? || resolved?
+      invalid_transition unless can_close?
       apply(IssueClosed.new(data: {issue_id: @id}))
     end
 
     def reopen
-      invalid_transition unless closed? || resolved?
+      invalid_transition unless can_reopen?
       apply(IssueReopened.new(data: {issue_id: @id}))
     end
 
     def start
-      invalid_transition unless open? || reopened?
+      invalid_transition unless can_start?
       apply(IssueProgressStarted.new(data: {issue_id: @id}))
     end
 
     def stop
-      invalid_transition unless in_progress?
+      invalid_transition unless can_stop?
       apply(IssueProgressStopped.new(data: {issue_id: @id}))
     end
 
@@ -64,6 +64,30 @@ module ProjectManagement
 
     def resolved?
       @status.equal? :resolved
+    end
+
+    def can_reopen?
+      closed? || resolved?
+    end
+
+    def can_start?
+      open? || reopened?
+    end
+
+    def can_stop?
+      in_progress?
+    end
+
+    def can_close?
+      open? || in_progress? || reopened? || resolved?
+    end
+
+    def can_resolve?
+      open? || reopened? || in_progress?
+    end
+
+    def can_create?
+      !open?
     end
 
     on IssueOpened do |ev|
