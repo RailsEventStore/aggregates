@@ -1,17 +1,23 @@
-test-aggregate_root:
+test_aggregate_root:
 	@bundle exec ruby -Itest test/aggregate_root_issue_test.rb
 
-mutate-aggregate_root:
+mutate_aggregate_root:
 	@bundle exec mutant --include test \
 		--include aggregate_root \
 		--require project_management \
 		--use minitest "ProjectManagement*"
 
-test-query_based:
+test_query_based:
 	@bundle exec ruby -Itest test/query_based_issue_test.rb
 
-test: test-aggregate_root test-query_based
+mutate_query_based:
+	@bundle exec mutant --include test \
+		--include query_based \
+		--require project_management \
+		--use minitest "ProjectManagement*"
 
-mutate: mutate-aggregate_root
+test: test_aggregate_root test_query_based
 
-.PHONY: test aggregate_root
+mutate: mutate_aggregate_root mutate_query_based
+
+.PHONY: test mutate
