@@ -16,8 +16,17 @@ mutate_query_based:
 		--require project_management \
 		--use minitest "ProjectManagement*"
 
-test: test_aggregate_root test_query_based
+test_extracted_state:
+	@bundle exec ruby -Itest -Iextracted_state -rproject_management test/issue_test.rb
 
-mutate: mutate_aggregate_root mutate_query_based
+mutate_extracted_state:
+	@bundle exec mutant --include test \
+		--include extracted_state \
+		--require project_management \
+		--use minitest "ProjectManagement*"
+
+test: test_aggregate_root test_query_based test_extracted_state
+
+mutate: mutate_aggregate_root mutate_query_based mutate_extracted_state
 
 .PHONY: test mutate
