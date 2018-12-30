@@ -34,8 +34,17 @@ mutate_functional:
 		--require project_management \
 		--use minitest "ProjectManagement*"
 
-test: test_aggregate_root test_query_based test_extracted_state test_functional
+test_polymorphic:
+	@bundle exec ruby -Itest -Ipolymorphic -rproject_management test/issue_test.rb
 
-mutate: mutate_aggregate_root mutate_query_based mutate_extracted_state mutate_functional
+mutate_polymorphic:
+	@bundle exec mutant --include test \
+		--include polymorphic \
+		--require project_management \
+		--use minitest "ProjectManagement*"
+
+test: test_aggregate_root test_query_based test_extracted_state test_functional test_polymorphic
+
+mutate: mutate_aggregate_root mutate_query_based mutate_extracted_state mutate_functional mutate_polymorphic
 
 .PHONY: test mutate
