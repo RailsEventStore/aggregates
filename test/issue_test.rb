@@ -124,6 +124,31 @@ module ProjectManagement
       assert_error { act(reopen_issue) }
     end
 
+    def test_close_from_create_start_resolved
+      arrange(create_issue, start_issue_progress, resolve_issue)
+      assert_closed { act(close_issue) }
+    end
+
+    def test_start_from_create_start_resolved_reopen
+      arrange(create_issue, start_issue_progress, resolve_issue, reopen_issue)
+      assert_started { act(start_issue_progress) }
+    end
+
+    def test_start_from_create_start_resolved_closed
+      arrange(create_issue, start_issue_progress, resolve_issue, close_issue)
+      assert_reopened { act(reopen_issue) }
+    end
+
+    def test_start_from_create_start_closed
+      arrange(create_issue, start_issue_progress, close_issue)
+      assert_reopened { act(reopen_issue) }
+    end
+
+    def test_close_from_create_start_resolved_closed
+      arrange(create_issue, start_issue_progress, resolve_issue, close_issue)
+      assert_error { act(close_issue) }
+    end
+
     private
 
     def setup
