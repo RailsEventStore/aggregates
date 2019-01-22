@@ -23,6 +23,8 @@ mutate_extracted_state:
 	@bundle exec mutant --include test \
 		--include extracted_state \
 		--require project_management \
+		--ignore-subject "ProjectManagement::Issue#apply_on_state" \
+		--ignore-subject "ProjectManagement::Issue#apply" \
 		--use minitest "ProjectManagement*"
 
 test_functional:
