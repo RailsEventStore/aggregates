@@ -154,6 +154,13 @@ module ProjectManagement
       assert_resolved { act(resolve_issue) }
     end
 
+    def test_passed_expected_version
+      assert_version(-1) { act(create_issue) }
+      assert_version(0) { act(start_issue_progress) }
+      assert_version(1) { act(close_issue) }
+      assert_version(2) { act(reopen_issue) }
+    end
+
     private
 
     def setup
@@ -205,6 +212,22 @@ module ProjectManagement
       assert_raises(Issue::InvalidTransition) do
         yield
       end
+    end
+
+    def assert_version(version_number)
+      captured_events  = []
+      captured_version = nil
+      captured_stream  = nil
+      fake_publish     = ->(events, stream_name:, expected_version:) do
+        captured_events  = events
+        captured_stream  = stream_name
+        captured_version = expected_version
+      end
+      event_store.stub(:publish, fake_publish) do
+        yield
+      end
+      event_store.publish(captured_events, stream_name: captured_stream, expected_version: captured_version)
+      assert_equal version_number, captured_version
     end
 
     def assert_opened

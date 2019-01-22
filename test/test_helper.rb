@@ -1,4 +1,5 @@
 require 'minitest/autorun'
+require 'minitest/mock'
 require 'mutant/minitest/coverage'
 require 'arkency/command_bus'
 require_relative '../lib/project_management'

@@ -4,7 +4,7 @@ class AggregateRepository
   end
 
   def with_aggregate(aggregate, stream)
-    version = :none
+    version = -1
     @event_store.read.stream(stream).each.with_index do |event, index|
       aggregate.apply(event)
       version = index
