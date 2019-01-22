@@ -11,51 +11,55 @@ module ProjectManagement
 
     def create(cmd)
       load_issue(cmd.id) do |issue|
-        reraise_if_invalid { issue.open }
+        raise_invalid unless issue.respond_to?(:open)
+        issue.open
         IssueOpened.new(data: {issue_id: cmd.id})
       end
     end
 
     def close(cmd)
       load_issue(cmd.id) do |issue|
-        reraise_if_invalid { issue.close }
+        raise_invalid unless issue.respond_to?(:close)
+        issue.close
         IssueClosed.new(data: {issue_id: cmd.id})
       end
     end
 
     def start(cmd)
       load_issue(cmd.id) do |issue|
-        reraise_if_invalid { issue.start }
+        raise_invalid unless issue.respond_to?(:start)
+        issue.start
         IssueProgressStarted.new(data: {issue_id: cmd.id})
       end
     end
 
     def stop(cmd)
       load_issue(cmd.id) do |issue|
-        reraise_if_invalid { issue.stop }
+        raise_invalid unless issue.respond_to?(:stop)
+        issue.stop
         IssueProgressStopped.new(data: {issue_id: cmd.id})
       end
     end
 
     def reopen(cmd)
       load_issue(cmd.id) do |issue|
-        reraise_if_invalid { issue.reopen }
+        raise_invalid unless issue.respond_to?(:reopen)
+        issue.reopen
         IssueReopened.new(data: {issue_id: cmd.id})
       end
     end
 
     def resolve(cmd)
       load_issue(cmd.id) do |issue|
-        reraise_if_invalid { issue.resolve }
+        raise_invalid unless issue.respond_to?(:resolve)
+        issue.resolve
         IssueResolved.new(data: {issue_id: cmd.id})
       end
     end
 
     private
 
-    def reraise_if_invalid
-      yield
-    rescue NoMethodError
+    def raise_invalid
       raise Issue::InvalidTransition
     end
 
