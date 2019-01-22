@@ -149,6 +149,11 @@ module ProjectManagement
       assert_error { act(close_issue) }
     end
 
+    def test_stream_isolation
+      arrange(create_issue, create_additional_issue)
+      assert_resolved { act(resolve_issue) }
+    end
+
     private
 
     def setup
@@ -170,6 +175,10 @@ module ProjectManagement
 
     def create_issue
       CreateIssue.new(issue_id)
+    end
+
+    def create_additional_issue
+      CreateIssue.new('96c785c9-5398-4010-b0ad-36bbd1d3f7a1')
     end
 
     def reopen_issue
