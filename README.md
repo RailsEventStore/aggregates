@@ -47,9 +47,18 @@ Module source: https://github.com/RailsEventStore/rails_event_store/tree/5378b34
 - domain classes per each state
 - no messaging in domain classes
 - no id in domain class
-- invalid state transition cared by not having such methods on objects
+- invalid state transition cared by raising exception
 
 More: https://blog.arkency.com/make-your-ruby-code-more-modular-and-functional-with-polymorphic-aggregate-classes/
+
+### Duck typing
+
+[source](duck_typing)
+
+- domain classes per each state
+- no messaging in domain classes
+- no id in domain class
+- invalid state transition cared by not having such methods on objects (duck)
 
 ### Aggregate with yield
 

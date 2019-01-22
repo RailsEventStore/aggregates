@@ -11,47 +11,53 @@ module ProjectManagement
 
     def create(cmd)
       load_issue(cmd.id) do |issue|
-        issue.open
+        reraise_if_invalid { issue.open }
         IssueOpened.new(data: {issue_id: cmd.id})
       end
     end
 
     def close(cmd)
       load_issue(cmd.id) do |issue|
-        issue.close
+        reraise_if_invalid { issue.close }
         IssueClosed.new(data: {issue_id: cmd.id})
       end
     end
 
     def start(cmd)
       load_issue(cmd.id) do |issue|
-        issue.start
+        reraise_if_invalid { issue.start }
         IssueProgressStarted.new(data: {issue_id: cmd.id})
       end
     end
 
     def stop(cmd)
       load_issue(cmd.id) do |issue|
-        issue.stop
+        reraise_if_invalid { issue.stop }
         IssueProgressStopped.new(data: {issue_id: cmd.id})
       end
     end
 
     def reopen(cmd)
       load_issue(cmd.id) do |issue|
-        issue.reopen
+        reraise_if_invalid { issue.reopen }
         IssueReopened.new(data: {issue_id: cmd.id})
       end
     end
 
     def resolve(cmd)
       load_issue(cmd.id) do |issue|
-        issue.resolve
+        reraise_if_invalid { issue.resolve }
         IssueResolved.new(data: {issue_id: cmd.id})
       end
     end
 
     private
+
+    def reraise_if_invalid
+      yield
+    rescue NoMethodError
+      raise Issue::InvalidTransition
+    end
 
     def stream_name(id)
       "Issue$#{id}"

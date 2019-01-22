@@ -45,6 +45,15 @@ mutate_polymorphic:
 		--require project_management \
 		--use minitest "ProjectManagement*"
 
+test_duck_typing:
+	@bundle exec ruby -Itest -Iduck_typing -rproject_management test/issue_test.rb
+
+mutate_duck_typing:
+	@bundle exec mutant --include test \
+		--include duck_typing \
+		--require project_management \
+		--use minitest "ProjectManagement*"
+
 test_yield_based:
 	@bundle exec ruby -Itest -Iyield_based -rproject_management test/issue_test.rb
 
@@ -54,8 +63,8 @@ mutate_yield_based:
 		--require project_management \
 		--use minitest "ProjectManagement*"
 
-test: test_aggregate_root test_query_based test_extracted_state test_functional test_polymorphic test_yield_based
+test: test_aggregate_root test_query_based test_extracted_state test_functional test_polymorphic test_duck_typing test_yield_based
 
-mutate: mutate_aggregate_root mutate_query_based mutate_extracted_state mutate_functional mutate_polymorphic mutate_yield_based
+mutate: mutate_aggregate_root mutate_query_based mutate_extracted_state mutate_functional mutate_polymorphic mutate_duck_typing mutate_yield_based
 
 .PHONY: test mutate
