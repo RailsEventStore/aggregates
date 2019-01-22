@@ -57,7 +57,8 @@ module ProjectManagement
     end
 
     def with_aggregate(id)
-      state = IssueProjection.new(event_store).call(Issue.new.tap { |i| i.id = id }, stream_name(id))
+      issue = Issue.new(id)
+      state = IssueProjection.new(event_store).call(issue, stream_name(id))
       event = yield state.issue
       event_store.publish(event, stream_name: stream_name(id), expected_version: state.version)
     end

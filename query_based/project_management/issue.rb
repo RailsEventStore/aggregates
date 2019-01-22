@@ -2,8 +2,11 @@ module ProjectManagement
   class Issue
     InvalidTransition = Class.new(StandardError)
 
-    attr_accessor :id
-    attr_accessor :status
+    attr_reader :id
+
+    def initialize(id)
+      @id = id
+    end
 
     def create
       self.status = :open
@@ -29,26 +32,6 @@ module ProjectManagement
       self.status = :open
     end
 
-    def open?
-      status.equal? :open
-    end
-
-    def closed?
-      status.equal? :closed
-    end
-
-    def in_progress?
-      status.equal? :in_progress
-    end
-
-    def reopened?
-      status.equal? :reopened
-    end
-
-    def resolved?
-      status.equal? :resolved
-    end
-
     def can_create?
       !open?
     end
@@ -71,6 +54,29 @@ module ProjectManagement
 
     def can_resolve?
       open? || reopened? || in_progress?
+    end
+
+    private
+    attr_accessor :status
+
+    def open?
+      status.equal? :open
+    end
+
+    def closed?
+      status.equal? :closed
+    end
+
+    def in_progress?
+      status.equal? :in_progress
+    end
+
+    def reopened?
+      status.equal? :reopened
+    end
+
+    def resolved?
+      status.equal? :resolved
     end
   end
 end
