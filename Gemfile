@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby ">= 2.5.0"
+
 gem 'ruby_event_store'
 gem 'aggregate_root'
 gem 'arkency-command_bus'
