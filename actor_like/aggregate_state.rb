@@ -1,4 +1,4 @@
-module AggregateRoot
+module AggregateState
   module ClassMethods
     def on(*event_klasses, &block)
       event_klasses.each do |event_klass|
@@ -23,21 +23,8 @@ module AggregateRoot
     host_class.extend(ClassMethods)
   end
 
-  def initialize(state)
-    @state = state
+  def call(event)
+    name = self.class.on_methods.fetch(event.class)
+    self.method(name).call(event)
   end
-
-  def link(supervisor)
-    @supervisor = supervisor
-    self
-  end
-
-  def apply(event)
-    supervisor.call(event) if supervisor
-    state.call(event)
-    self
-  end
-
-  private
-  attr_reader :supervisor, :state
 end

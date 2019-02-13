@@ -10,27 +10,27 @@ module ProjectManagement
 
     def resolve
       invalid_transition unless can_resolve?
-      apply(IssueResolved.new(data: {issue_id: @id}))
+      apply(IssueResolved.new(data: {issue_id: state.id}))
     end
 
     def close
       invalid_transition unless can_close?
-      apply(IssueClosed.new(data: {issue_id: @id}))
+      apply(IssueClosed.new(data: {issue_id: state.id}))
     end
 
     def reopen
       invalid_transition unless can_reopen?
-      apply(IssueReopened.new(data: {issue_id: @id}))
+      apply(IssueReopened.new(data: {issue_id: state.id}))
     end
 
     def start
       invalid_transition unless can_start?
-      apply(IssueProgressStarted.new(data: {issue_id: @id}))
+      apply(IssueProgressStarted.new(data: {issue_id: state.id}))
     end
 
     def stop
       invalid_transition unless can_stop?
-      apply(IssueProgressStopped.new(data: {issue_id: @id}))
+      apply(IssueProgressStopped.new(data: {issue_id: state.id}))
     end
 
     private
@@ -40,23 +40,23 @@ module ProjectManagement
     end
 
     def open?
-      @status.equal? :open
+      state.status.equal? :open
     end
 
     def closed?
-      @status.equal? :closed
+      state.status.equal? :closed
     end
 
     def in_progress?
-      @status.equal? :in_progress
+      state.status.equal? :in_progress
     end
 
     def reopened?
-      @status.equal? :reopened
+      state.status.equal? :reopened
     end
 
     def resolved?
-      @status.equal? :resolved
+      state.status.equal? :resolved
     end
 
     def can_reopen?
@@ -81,31 +81,6 @@ module ProjectManagement
 
     def can_create?
       !open?
-    end
-
-    on IssueOpened do |ev|
-      @id = ev.data.fetch(:issue_id)
-      @status = :open
-    end
-
-    on IssueResolved do |ev|
-      @status = :resolved
-    end
-
-    on IssueClosed do |ev|
-      @status = :closed
-    end
-
-    on IssueReopened do |ev|
-      @status = :reopened
-    end
-
-    on IssueProgressStarted do |ev|
-      @status = :in_progress
-    end
-
-    on IssueProgressStopped do |ev|
-      @status = :open
     end
   end
 end
