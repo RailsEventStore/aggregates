@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/mbj/mutant.git
-  revision: cc8c473f236af985457d60f95d84c2902cf38f3d
+  revision: a69c92fc20784ce52f9a5672f106c073d0e0d8e8
   specs:
     mutant (0.8.25)
       abstract_type (~> 0.0.7)
@@ -27,8 +27,8 @@ GEM
     adamantium (0.2.0)
       ice_nine (~> 0.11.0)
       memoizable (~> 0.4.0)
-    aggregate_root (0.35.0)
-      ruby_event_store (= 0.35.0)
+    aggregate_root (0.36.0)
+      ruby_event_store (= 0.36.0)
     anima (0.3.0)
       abstract_type (~> 0.0.7)
       adamantium (~> 0.2)
@@ -58,7 +58,7 @@ GEM
     parser (2.5.3.0)
       ast (~> 2.4.0)
     procto (0.0.3)
-    ruby_event_store (0.35.0)
+    ruby_event_store (0.36.0)
       concurrent-ruby (~> 1.0)
     thread_safe (0.3.6)
     unparser (0.4.2)
