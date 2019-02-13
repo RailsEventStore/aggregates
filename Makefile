@@ -63,8 +63,17 @@ mutate_yield_based:
 		--require project_management \
 		--use minitest "ProjectManagement*"
 
-test: test_aggregate_root test_query_based test_extracted_state test_functional test_polymorphic test_duck_typing test_yield_based
+test_actor_like:
+	@bundle exec ruby -Itest -Iactor_like -rproject_management test/issue_test.rb
 
-mutate: mutate_aggregate_root mutate_query_based mutate_extracted_state mutate_functional mutate_polymorphic mutate_duck_typing mutate_yield_based
+mutate_actor_like:
+	@bundle exec mutant --include test \
+		--include actor_like\
+		--require project_management \
+		--use minitest "ProjectManagement*"
+
+test: test_aggregate_root test_query_based test_extracted_state test_functional test_polymorphic test_duck_typing test_yield_based test_actor_like
+
+mutate: mutate_aggregate_root mutate_query_based mutate_extracted_state mutate_functional mutate_polymorphic mutate_duck_typing mutate_yield_based mutate_actor_like
 
 .PHONY: test mutate
