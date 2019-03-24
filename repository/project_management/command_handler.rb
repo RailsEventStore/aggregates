@@ -5,39 +5,27 @@ module ProjectManagement
     end
 
     def create(cmd)
-      with_aggregate(cmd.id) do |issue|
-        issue.create
-      end
+      with_aggregate(cmd.id, &:create)
     end
 
     def resolve(cmd)
-      with_aggregate(cmd.id) do |issue|
-        issue.resolve
-      end
+      with_aggregate(cmd.id, &:resolve)
     end
 
     def close(cmd)
-      with_aggregate(cmd.id) do |issue|
-        issue.close
-      end
+      with_aggregate(cmd.id, &:close)
     end
 
     def reopen(cmd)
-      with_aggregate(cmd.id) do |issue|
-        issue.reopen
-      end
+      with_aggregate(cmd.id, &:reopen)
     end
 
     def start(cmd)
-      with_aggregate(cmd.id) do |issue|
-        issue.start
-      end
+      with_aggregate(cmd.id, &:start)
     end
 
     def stop(cmd)
-      with_aggregate(cmd.id) do |issue|
-        issue.stop
-      end
+      with_aggregate(cmd.id, &:stop)
     end
 
     private
@@ -45,9 +33,10 @@ module ProjectManagement
     attr_reader :repository
 
     def with_aggregate(id)
-      issue, version = repository.load(id)
+      events, current_version = repository.load(id)
+      issue = Issue.load(id, events)
       yield issue
-      repository.save(issue, version)
+      repository.save(id, current_version, issue.changes)
     end
   end
 end

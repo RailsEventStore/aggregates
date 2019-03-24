@@ -66,3 +66,14 @@ More: https://blog.arkency.com/make-your-ruby-code-more-modular-and-functional-w
 
 - yield is used to publish events (no unpublished_events in aggregate)
 - aggregate repository separated from logic
+
+### Aggregate with repository
+
+[source](repository)
+
+- aggregate is unware of infrastructure
+- aggregate can built itself from events (but it could be recreated in any way)
+- aggregate keeps the state
+- aggregate registers events aka changes
+- aggregate provides API to read registered events
+- Infrastructure (through repository in this case) is responsible for building/saving the aggregate so it could be done in any way - Event Sourcing, serialization etc

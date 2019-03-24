@@ -2,16 +2,23 @@ module ProjectManagement
   class Issue
     InvalidTransition = Class.new(StandardError)
 
-    attr_reader :id
-    attr_reader :events
+    attr_reader :changes
+
+    def self.load(id, events)
+      issue = new(id)
+      issue.load(events)
+    end
 
     def initialize(id)
       @id = id
-      @events = []
+      @changes = []
     end
 
-    def clear_events
-      @events = []
+    def load(events)
+      events.each { |ev| on(ev) }
+      clear_changes
+
+      self
     end
 
     def create
@@ -65,7 +72,7 @@ module ProjectManagement
     private
 
     def register_event(event)
-      @events << event
+      changes << event
     end
 
     def invalid_transition
@@ -114,6 +121,30 @@ module ProjectManagement
 
     def can_create?
       !open?
+    end
+
+
+    private
+
+    def clear_changes
+      @changes = []
+    end
+
+    def on(event)
+      case event
+      when IssueOpened
+        create
+      when IssueResolved
+        resolve
+      when IssueClosed
+        close
+      when IssueReopened
+        reopen
+      when IssueProgressStarted
+        start
+      when IssueProgressStopped
+        stop
+      end
     end
   end
 end
