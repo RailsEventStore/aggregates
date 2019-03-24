@@ -73,7 +73,7 @@ More: https://blog.arkency.com/make-your-ruby-code-more-modular-and-functional-w
 
 - aggregate is unware of infrastructure
 - aggregate can built itself from events (but it could be recreated in any way)
-- aggregate keeps the state
+- aggregate keeps the state in PORO way
 - aggregate registers events aka changes
 - aggregate provides API to read registered events
 - Infrastructure (through repository in this case) is responsible for building/saving the aggregate so it could be done in any way - Event Sourcing, serialization etc

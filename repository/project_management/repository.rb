@@ -12,9 +12,11 @@ module ProjectManagement
     end
 
     def save(id, current_version, changes)
-      changes.each.with_index(current_version) do |event, index|
-        store.publish(event, stream_name: stream_name(id), expected_version: index)
-      end
+      store.publish(
+        changes,
+        stream_name: stream_name(id),
+        expected_version: current_version
+      )
     end
 
     private

@@ -123,9 +123,6 @@ module ProjectManagement
       !open?
     end
 
-
-    private
-
     def clear_changes
       @changes = []
     end
