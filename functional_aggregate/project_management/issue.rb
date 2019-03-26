@@ -1,5 +1,3 @@
-require 'aggregate_root'
-
 module ProjectManagement
   module Issue
     InvalidTransition = Class.new(StandardError)
