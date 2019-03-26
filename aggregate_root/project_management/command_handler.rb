@@ -1,7 +1,7 @@
 module ProjectManagement
   class CommandHandler
     def initialize(event_store)
-      @event_store = event_store
+      @repository = AggregateRoot::Repository.new(event_store)
     end
 
     def create(cmd)
@@ -41,17 +41,14 @@ module ProjectManagement
     end
 
     private
-    attr_reader :event_store
+    attr_reader :repository
 
     def stream_name(id)
       "Issue$#{id}"
     end
 
-    def with_aggregate(id)
-      issue = Issue.new(id)
-      issue.load(stream_name(id), event_store: event_store)
-      yield issue
-      issue.store(event_store: event_store)
+    def with_aggregate(id, &block)
+      repository.with_aggregate(Issue.new(id), stream_name(id), &block)
     end
   end
 end
