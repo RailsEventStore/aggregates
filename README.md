@@ -77,3 +77,10 @@ More: https://blog.arkency.com/make-your-ruby-code-more-modular-and-functional-w
 - aggregate registers events aka changes
 - aggregate provides API to read registered events
 - Infrastructure (through repository in this case) is responsible for building/saving the aggregate so it could be done in any way - Event Sourcing, serialization etc
+
+### Roles/DCI
+
+[source](roles)
+- better mental model by not having separate classes per state
+- one object which changes roles
+- `extend(Role.clone)` is used as Ruby ignores subsequent extend with the same module

@@ -45,6 +45,15 @@ mutate_polymorphic:
 		--require project_management \
 		--use minitest "ProjectManagement*"
 
+test_roles:
+	@bundle exec ruby -Itest -Iroles -rproject_management test/issue_test.rb
+
+mutate_roles:
+	@bundle exec mutant --include test \
+		--include roles \
+		--require project_management \
+		--use minitest "ProjectManagement*"
+
 test_duck_typing:
 	@bundle exec ruby -Itest -Iduck_typing -rproject_management test/issue_test.rb
 
