@@ -10,32 +10,26 @@ module ProjectManagement
 
     def create
       raise InvalidTransition unless !open?
-      @status = :open
     end
 
     def resolve
       raise InvalidTransition unless open? || reopened? || in_progress?
-      @status = :resolved
     end
 
     def close
       raise InvalidTransition unless open? || in_progress? || reopened? || resolved?
-      @status = :closed
     end
 
     def reopen
       raise InvalidTransition unless closed? || resolved?
-      @status = :reopened
     end
 
     def start
       raise InvalidTransition unless open? || reopened?
-      @status = :in_progress
     end
 
     def stop
       raise InvalidTransition unless in_progress?
-      @status = :open
     end
 
     private
