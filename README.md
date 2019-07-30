@@ -84,3 +84,11 @@ More: https://blog.arkency.com/make-your-ruby-code-more-modular-and-functional-w
 - better mental model by not having separate classes per state
 - one object which changes roles
 - `extend(Role.clone)` is used as Ruby ignores subsequent extend with the same module
+
+### PORO with attributes
+
+[source](poro)
+
+- clear separation of state sourcing (with projection)
+- aggregate not aware of events
+- aggregate object is still responsible for holding invariants
