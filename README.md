@@ -92,3 +92,4 @@ More: https://blog.arkency.com/make-your-ruby-code-more-modular-and-functional-w
 - clear separation of state sourcing (with projection)
 - aggregate not aware of events
 - aggregate object is still responsible for holding invariants
+- no id in domain class
