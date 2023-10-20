@@ -11,44 +11,38 @@ module ProjectManagement
     end
 
     def open
-      fail unless initial?
+      fail if @status
       apply(IssueOpened.new(data: { issue_id: @id }))
     end
 
     def resolve
-      fail unless open? || reopened? || in_progress?
+      fail unless %i[open in_progress reopened].include? @status
       apply(IssueResolved.new(data: { issue_id: @id }))
     end
 
     def close
-      fail unless open? || in_progress? || reopened? || resolved?
+      fail unless %i[open in_progress resolved reopened].include? @status
       apply(IssueClosed.new(data: { issue_id: @id }))
     end
 
     def reopen
-      fail unless closed? || resolved?
+      fail unless %i[resolved closed].include? @status
       apply(IssueReopened.new(data: { issue_id: @id }))
     end
 
     def start
-      fail unless open? || reopened?
+      fail unless %i[open reopened].include? @status
       apply(IssueProgressStarted.new(data: { issue_id: @id }))
     end
 
     def stop
-      fail unless in_progress?
+      fail unless %i[in_progress].include? @status
       apply(IssueProgressStopped.new(data: { issue_id: @id }))
     end
 
     private
 
     def fail = raise InvalidTransition
-    def initial? = @status.nil?
-    def open? = @status == :open
-    def closed? = @status == :closed
-    def in_progress? = @status == :in_progress
-    def reopened? = @status == :reopened
-    def resolved? = @status == :resolved
 
     on(IssueOpened) { |event| @status = :open }
     on(IssueResolved) { |event| @status = :resolved }
