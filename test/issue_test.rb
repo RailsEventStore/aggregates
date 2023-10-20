@@ -39,6 +39,26 @@ module ProjectManagement
       assert_error { act(create_issue) }
     end
 
+    def test_create_from_resolved
+      arrange(create_issue, resolve_issue)
+      assert_error { act(create_issue) }
+    end
+
+    def test_create_from_in_progress
+      arrange(create_issue, start_issue_progress)
+      assert_error { act(create_issue) }
+    end
+
+    def test_create_from_closed
+      arrange(create_issue, close_issue)
+      assert_error { act(create_issue) }
+    end
+
+    def test_reopen_from_in_progress
+      arrange(create_issue, start_issue_progress)
+      assert_error { act(reopen_issue) }
+    end
+
     def test_resolve_from_opened
       arrange(create_issue)
       assert_resolved { act(resolve_issue) }
@@ -59,6 +79,11 @@ module ProjectManagement
       assert_error { act(resolve_issue) }
     end
 
+    def test_resolve_from_closed
+      arrange(create_issue, close_issue)
+      assert_error { act(resolve_issue) }
+    end
+
     def test_start_from_opened
       arrange(create_issue)
       assert_started { act(start_issue_progress) }
@@ -71,6 +96,16 @@ module ProjectManagement
 
     def test_start_from_in_progress
       arrange(create_issue, start_issue_progress)
+      assert_error { act(start_issue_progress) }
+    end
+
+    def test_start_from_resolved
+      arrange(create_issue, resolve_issue)
+      assert_error { act(start_issue_progress) }
+    end
+
+    def test_start_from_closed
+      arrange(create_issue, close_issue)
       assert_error { act(start_issue_progress) }
     end
 
@@ -106,6 +141,16 @@ module ProjectManagement
 
     def test_stop_from_open
       arrange(create_issue)
+      assert_error { act(stop_issue_progress) }
+    end
+
+    def test_stop_from_resolved
+      arrange(create_issue, resolve_issue)
+      assert_error { act(stop_issue_progress) }
+    end
+
+    def test_stop_from_closed
+      arrange(create_issue, close_issue)
       assert_error { act(stop_issue_progress) }
     end
 
