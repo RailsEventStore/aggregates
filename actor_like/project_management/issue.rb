@@ -80,7 +80,7 @@ module ProjectManagement
     end
 
     def can_create?
-      !open?
+      state.status.nil?
     end
   end
 end
