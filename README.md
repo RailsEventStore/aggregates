@@ -36,7 +36,7 @@ Module source: https://github.com/RailsEventStore/rails_event_store/tree/5378b34
 
 ### Functional aggregate
 
-[source](functional_aggregate)
+[source](functional)
 
 - no single aggregate, just functions that take state and return events
 

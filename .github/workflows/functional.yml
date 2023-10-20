@@ -1,4 +1,4 @@
-name: functional_aggregate
+name: functional
 on:
   workflow_dispatch:
   push:
@@ -17,7 +17,7 @@ jobs:
         with:
           ruby-version: 3.2.2
           bundler-cache: true
-      - run: make test_functional_aggregate
+      - run: make test_functional
   mutate:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -28,4 +28,4 @@ jobs:
         with:
           ruby-version: 3.2.2
           bundler-cache: true
-      - run: make mutate_functional_aggregate
+      - run: make mutate_functional

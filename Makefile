@@ -28,11 +28,11 @@ mutate_extracted_state:
 		--use minitest "ProjectManagement*"
 
 test_functional:
-	@bundle exec ruby -Itest -Ifunctional_aggregate -rproject_management test/issue_test.rb
+	@bundle exec ruby -Itest -Ifunctional -rproject_management test/issue_test.rb
 
 mutate_functional:
 	@bundle exec mutant run --include test \
-		--include functional_aggregate \
+		--include functional \
 		--require project_management \
 		--use minitest "ProjectManagement*"
 
