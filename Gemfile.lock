@@ -1,29 +1,11 @@
-GIT
-  remote: git://github.com/mbj/mutant.git
-  revision: a69c92fc20784ce52f9a5672f106c073d0e0d8e8
+GEM
+  remote: https://oss:7AXfeZdAfCqL1PvHm2nvDJO6Zd9UW8IK@gem.mutant.dev/
   specs:
-    mutant (0.8.25)
-      abstract_type (~> 0.0.7)
-      adamantium (~> 0.2.0)
-      anima (~> 0.3.0)
-      ast (~> 2.2)
-      concord (~> 0.1.5)
-      diff-lcs (~> 1.3)
-      equalizer (~> 0.0.9)
-      ice_nine (~> 0.11.1)
-      memoizable (~> 0.4.2)
-      morpher (~> 0.2.6)
-      parser (~> 2.5.1)
-      procto (~> 0.0.2)
-      unparser (~> 0.4.2)
-    mutant-minitest (0.8.25)
-      minitest (~> 5.11)
-      mutant (~> 0.8.25)
+    mutant-license (0.1.1.2.1627430819213747598431630701693729869473.6)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    abstract_type (0.0.7)
     activemodel (5.2.2)
       activesupport (= 5.2.2)
     activerecord (5.2.2)
@@ -35,50 +17,39 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-    adamantium (0.2.0)
-      ice_nine (~> 0.11.0)
-      memoizable (~> 0.4.0)
     aggregate_root (0.38.1)
       ruby_event_store (= 0.38.1)
-    anima (0.3.0)
-      abstract_type (~> 0.0.7)
-      adamantium (~> 0.2)
-      equalizer (~> 0.0.11)
     arel (9.0.0)
     arkency-command_bus (0.4.0)
       thread_safe
-    ast (2.4.0)
-    concord (0.1.5)
-      adamantium (~> 0.2.0)
-      equalizer (~> 0.0.9)
+    ast (2.4.2)
     concurrent-ruby (1.1.5)
-    diff-lcs (1.3)
-    equalizer (0.0.11)
+    diff-lcs (1.5.0)
     equatable (0.5.0)
     i18n (1.5.1)
       concurrent-ruby (~> 1.0)
-    ice_nine (0.11.2)
-    memoizable (0.4.2)
-      thread_safe (~> 0.3, >= 0.3.1)
     minitest (5.11.3)
-    morpher (0.2.6)
-      abstract_type (~> 0.0.7)
-      adamantium (~> 0.2.0)
-      anima (~> 0.3.0)
-      ast (~> 2.2)
-      concord (~> 0.1.5)
-      equalizer (~> 0.0.9)
-      ice_nine (~> 0.11.0)
-      procto (~> 0.0.2)
+    mutant (0.11.24)
+      diff-lcs (~> 1.3)
+      parser (~> 3.2.2, >= 3.2.2.4)
+      regexp_parser (~> 2.8.2)
+      sorbet-runtime (~> 0.5.0)
+      unparser (~> 0.6.9)
+    mutant-minitest (0.11.24)
+      minitest (~> 5.11)
+      mutant (= 0.11.24)
     necromancer (0.5.0)
-    parser (2.5.3.0)
-      ast (~> 2.4.0)
+    parser (3.2.2.4)
+      ast (~> 2.4.1)
+      racc
     pastel (0.7.2)
       equatable (~> 0.5.0)
       tty-color (~> 0.4.0)
-    procto (0.0.3)
+    racc (1.7.1)
+    regexp_parser (2.8.2)
     ruby_event_store (0.38.1)
       concurrent-ruby (~> 1.0)
+    sorbet-runtime (0.5.11081)
     thread_safe (0.3.6)
     tty-color (0.4.3)
     tty-cursor (0.7.0)
@@ -93,25 +64,22 @@ GEM
     tty-screen (0.7.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
-    unparser (0.4.2)
-      abstract_type (~> 0.0.7)
-      adamantium (~> 0.2.0)
-      concord (~> 0.1.5)
+    unparser (0.6.9)
       diff-lcs (~> 1.3)
-      equalizer (~> 0.0.9)
-      parser (>= 2.3.1.2, < 2.6)
-      procto (~> 0.0.2)
+      parser (>= 3.2.2.4)
     wisper (2.0.0)
 
 PLATFORMS
-  ruby
+  arm64-darwin-22
 
 DEPENDENCIES
   activerecord
   aggregate_root
   arkency-command_bus
   minitest
-  mutant-minitest!
+  mutant
+  mutant-license!
+  mutant-minitest
   ruby_event_store
   tty-prompt
 
