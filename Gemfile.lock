@@ -24,8 +24,8 @@ GEM
       tzinfo (~> 2.0)
     aggregate_root (2.12.1)
       ruby_event_store (= 2.12.1)
-    arkency-command_bus (0.4.0)
-      thread_safe
+    arkency-command_bus (0.4.1)
+      concurrent-ruby
     ast (2.4.2)
     base64 (0.1.1)
     bigdecimal (3.1.4)
@@ -61,7 +61,6 @@ GEM
     ruby_event_store (2.12.1)
       concurrent-ruby (~> 1.0, >= 1.1.6)
     sorbet-runtime (0.5.11081)
-    thread_safe (0.3.6)
     timeout (0.4.0)
     tty-color (0.4.3)
     tty-cursor (0.7.0)
