@@ -8,7 +8,7 @@ on:
       - reopened
 jobs:
   test:
-    runs-on: ubuntu-20.04
+    runs-on: macos-13-large
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
