@@ -11,50 +11,56 @@ module ProjectManagement
 
     def create(cmd)
       load_issue(cmd.id) do |issue|
-        raise_invalid unless issue.respond_to?(:open)
         issue.open
         IssueOpened.new(data: { issue_id: cmd.id })
       end
+    rescue NoMethodError
+      raise_invalid
     end
 
     def close(cmd)
       load_issue(cmd.id) do |issue|
-        raise_invalid unless issue.respond_to?(:close)
         issue.close
         IssueClosed.new(data: { issue_id: cmd.id })
       end
+    rescue NoMethodError
+      raise_invalid
     end
 
     def start(cmd)
       load_issue(cmd.id) do |issue|
-        raise_invalid unless issue.respond_to?(:start)
         issue.start
         IssueProgressStarted.new(data: { issue_id: cmd.id })
       end
+    rescue NoMethodError
+      raise_invalid
     end
 
     def stop(cmd)
       load_issue(cmd.id) do |issue|
-        raise_invalid unless issue.respond_to?(:stop)
         issue.stop
         IssueProgressStopped.new(data: { issue_id: cmd.id })
       end
+    rescue NoMethodError
+      raise_invalid
     end
 
     def reopen(cmd)
       load_issue(cmd.id) do |issue|
-        raise_invalid unless issue.respond_to?(:reopen)
         issue.reopen
         IssueReopened.new(data: { issue_id: cmd.id })
       end
+    rescue NoMethodError
+      raise_invalid
     end
 
     def resolve(cmd)
       load_issue(cmd.id) do |issue|
-        raise_invalid unless issue.respond_to?(:resolve)
         issue.resolve
         IssueResolved.new(data: { issue_id: cmd.id })
       end
+    rescue NoMethodError
+      raise_invalid
     end
 
     private
@@ -74,22 +80,22 @@ module ProjectManagement
         .read
         .stream(stream_name(id))
         .each do |event|
-          case event
-          when IssueOpened
-            issue = issue.open
-          when IssueProgressStarted
-            issue = issue.start
-          when IssueProgressStopped
-            issue = issue.stop
-          when IssueResolved
-            issue = issue.resolve
-          when IssueReopened
-            issue = issue.reopen
-          when IssueClosed
-            issue = issue.close
-          end
-          version += 1
+        case event
+        when IssueOpened
+          issue = issue.open
+        when IssueProgressStarted
+          issue = issue.start
+        when IssueProgressStopped
+          issue = issue.stop
+        when IssueResolved
+          issue = issue.resolve
+        when IssueReopened
+          issue = issue.reopen
+        when IssueClosed
+          issue = issue.close
         end
+        version += 1
+      end
       events = yield issue
       publish(events, id, version)
     end
