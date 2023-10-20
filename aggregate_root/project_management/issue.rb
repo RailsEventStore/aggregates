@@ -10,7 +10,7 @@ module ProjectManagement
       @id = id
     end
 
-    def create
+    def open
       invalid_transition unless initial?
       apply(IssueOpened.new(data: { issue_id: @id }))
     end

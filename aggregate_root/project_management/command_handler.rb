@@ -5,7 +5,7 @@ module ProjectManagement
     end
 
     def create(cmd)
-      with_aggregate(cmd.id) { |issue| issue.create }
+      with_aggregate(cmd.id) { |issue| issue.open}
     end
 
     def resolve(cmd)
