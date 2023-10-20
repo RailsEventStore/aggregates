@@ -30,7 +30,7 @@ module ProjectManagement
       yield
       actual_events =
         before.nil? ? scope.to_a : scope.from(before.event_id).to_a
-      to_compare = ->(ev) { ev.to_h.slice(:type, :data) }
+      to_compare = ->(event) { { data: event.data, type: event.event_type } }
       assert_equal expected_events.map(&to_compare),
                    actual_events.map(&to_compare)
     end
