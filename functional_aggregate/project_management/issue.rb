@@ -11,7 +11,7 @@ module ProjectManagement
       private
 
       def can_create?(state)
-        !state.open?
+        state.initial?
       end
     end
 

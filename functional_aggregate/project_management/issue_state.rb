@@ -1,5 +1,8 @@
 module ProjectManagement
   class IssueState < Struct.new(:id, :status)
+    def initial?
+      status.nil?
+    end
     def open?
       status.equal?(:open)
     end
