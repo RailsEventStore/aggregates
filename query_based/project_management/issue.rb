@@ -33,7 +33,7 @@ module ProjectManagement
     end
 
     def can_create?
-      !open?
+      status.nil?
     end
 
     def can_reopen?
