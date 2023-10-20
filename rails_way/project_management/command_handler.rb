@@ -1,9 +1,9 @@
-require 'sqlite3'
-require 'active_record'
+require "sqlite3"
+require "active_record"
 
 ActiveRecord::Base.establish_connection(
-  adapter: 'sqlite3',
-  database: ':memory:'
+  adapter: "sqlite3",
+  database: ":memory:"
 )
 
 ActiveRecord::Schema.define do
@@ -14,7 +14,6 @@ ActiveRecord::Schema.define do
 end
 
 module ProjectManagement
-
   class CommandHandler
     def initialize(event_store)
       @event_store = event_store
@@ -23,42 +22,42 @@ module ProjectManagement
     def create(cmd)
       load_issue(cmd.id) do |issue|
         issue.open
-        IssueOpened.new(data: {issue_id: cmd.id})
+        IssueOpened.new(data: { issue_id: cmd.id })
       end
     end
 
     def close(cmd)
       load_issue(cmd.id) do |issue|
         issue.close
-        IssueClosed.new(data: {issue_id: cmd.id})
+        IssueClosed.new(data: { issue_id: cmd.id })
       end
     end
 
     def start(cmd)
       load_issue(cmd.id) do |issue|
         issue.start
-        IssueProgressStarted.new(data: {issue_id: cmd.id})
+        IssueProgressStarted.new(data: { issue_id: cmd.id })
       end
     end
 
     def stop(cmd)
       load_issue(cmd.id) do |issue|
         issue.stop
-        IssueProgressStopped.new(data: {issue_id: cmd.id})
+        IssueProgressStopped.new(data: { issue_id: cmd.id })
       end
     end
 
     def reopen(cmd)
       load_issue(cmd.id) do |issue|
         issue.reopen
-        IssueReopened.new(data: {issue_id: cmd.id})
+        IssueReopened.new(data: { issue_id: cmd.id })
       end
     end
 
     def resolve(cmd)
       load_issue(cmd.id) do |issue|
         issue.resolve
-        IssueResolved.new(data: {issue_id: cmd.id})
+        IssueResolved.new(data: { issue_id: cmd.id })
       end
     end
 
@@ -76,10 +75,7 @@ module ProjectManagement
     end
 
     def publish(events, id)
-      @event_store.publish(
-        events,
-        stream_name: stream_name(id),
-      )
+      @event_store.publish(events, stream_name: stream_name(id))
     end
   end
 end

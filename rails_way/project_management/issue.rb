@@ -1,7 +1,7 @@
 module ProjectManagement
-
   class Issue < ActiveRecord::Base
-    class InvalidTransition < StandardError; end
+    class InvalidTransition < StandardError
+    end
 
     def open
       invalid_transition unless can_create?

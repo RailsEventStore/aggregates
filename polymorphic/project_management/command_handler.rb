@@ -1,7 +1,7 @@
 module ProjectManagement
-
   class Issue
-    class InvalidTransition < StandardError; end
+    class InvalidTransition < StandardError
+    end
   end
 
   class CommandHandler
@@ -12,42 +12,42 @@ module ProjectManagement
     def create(cmd)
       load_issue(cmd.id) do |issue|
         issue.open
-        IssueOpened.new(data: {issue_id: cmd.id})
+        IssueOpened.new(data: { issue_id: cmd.id })
       end
     end
 
     def close(cmd)
       load_issue(cmd.id) do |issue|
         issue.close
-        IssueClosed.new(data: {issue_id: cmd.id})
+        IssueClosed.new(data: { issue_id: cmd.id })
       end
     end
 
     def start(cmd)
       load_issue(cmd.id) do |issue|
         issue.start
-        IssueProgressStarted.new(data: {issue_id: cmd.id})
+        IssueProgressStarted.new(data: { issue_id: cmd.id })
       end
     end
 
     def stop(cmd)
       load_issue(cmd.id) do |issue|
         issue.stop
-        IssueProgressStopped.new(data: {issue_id: cmd.id})
+        IssueProgressStopped.new(data: { issue_id: cmd.id })
       end
     end
 
     def reopen(cmd)
       load_issue(cmd.id) do |issue|
         issue.reopen
-        IssueReopened.new(data: {issue_id: cmd.id})
+        IssueReopened.new(data: { issue_id: cmd.id })
       end
     end
 
     def resolve(cmd)
       load_issue(cmd.id) do |issue|
         issue.resolve
-        IssueResolved.new(data: {issue_id: cmd.id})
+        IssueResolved.new(data: { issue_id: cmd.id })
       end
     end
 
@@ -60,23 +60,26 @@ module ProjectManagement
     def load_issue(id)
       version = -1
       issue = Issue.new
-      @event_store.read.stream(stream_name(id)).each do |event|
-        case event
-        when IssueOpened
-          issue = issue.open
-        when IssueProgressStarted
-          issue = issue.start
-        when IssueProgressStopped
-          issue = issue.stop
-        when IssueResolved
-          issue = issue.resolve
-        when IssueReopened
-          issue = issue.reopen
-        when IssueClosed
-          issue = issue.close
+      @event_store
+        .read
+        .stream(stream_name(id))
+        .each do |event|
+          case event
+          when IssueOpened
+            issue = issue.open
+          when IssueProgressStarted
+            issue = issue.start
+          when IssueProgressStopped
+            issue = issue.stop
+          when IssueResolved
+            issue = issue.resolve
+          when IssueReopened
+            issue = issue.reopen
+          when IssueClosed
+            issue = issue.close
+          end
+          version += 1
         end
-        version += 1
-      end
       events = yield issue
       publish(events, id, version)
     end

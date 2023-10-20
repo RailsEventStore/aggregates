@@ -57,6 +57,7 @@ module ProjectManagement
     end
 
     private
+
     attr_accessor :status
 
     def open?

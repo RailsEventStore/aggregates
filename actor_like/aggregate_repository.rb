@@ -5,12 +5,23 @@ class AggregateRepository
 
   def with_state(state, stream)
     version = -1
-    @event_store.read.stream(stream).each.with_index do |event, index|
-      state.call(event)
-      version = index
-    end
+    @event_store
+      .read
+      .stream(stream)
+      .each
+      .with_index do |event, index|
+        state.call(event)
+        version = index
+      end
 
-    store = -> event { @event_store.publish(event, stream_name: stream, expected_version: version); true }
+    store = ->(event) do
+      @event_store.publish(
+        event,
+        stream_name: stream,
+        expected_version: version
+      )
+      true
+    end
     yield state, store
   end
 end

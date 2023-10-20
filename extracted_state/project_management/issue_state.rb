@@ -22,12 +22,18 @@ module ProjectManagement
 
     def apply(event)
       case event
-      when IssueOpened          then self.status = :open
-      when IssueResolved        then self.status = :resolved
-      when IssueClosed          then self.status = :closed
-      when IssueReopened        then self.status = :reopened
-      when IssueProgressStarted then self.status = :in_progress
-      when IssueProgressStopped then self.status = :open
+      when IssueOpened
+        self.status = :open
+      when IssueResolved
+        self.status = :resolved
+      when IssueClosed
+        self.status = :closed
+      when IssueReopened
+        self.status = :reopened
+      when IssueProgressStarted
+        self.status = :in_progress
+      when IssueProgressStopped
+        self.status = :open
       end
     end
   end

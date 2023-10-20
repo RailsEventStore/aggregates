@@ -6,40 +6,41 @@ module ProjectManagement
 
     def initialize(state)
       @changes = []
-      @state   = state
+      @state = state
     end
 
     def create
       invalid_transition unless can_create?
-      apply(IssueOpened.new(data: {issue_id: state.id}))
+      apply(IssueOpened.new(data: { issue_id: state.id }))
     end
 
     def resolve
       invalid_transition unless can_resolve?
-      apply(IssueResolved.new(data: {issue_id: state.id}))
+      apply(IssueResolved.new(data: { issue_id: state.id }))
     end
 
     def close
       invalid_transition unless can_close?
-      apply(IssueClosed.new(data: {issue_id: state.id}))
+      apply(IssueClosed.new(data: { issue_id: state.id }))
     end
 
     def reopen
       invalid_transition unless can_reopen?
-      apply(IssueReopened.new(data: {issue_id: state.id}))
+      apply(IssueReopened.new(data: { issue_id: state.id }))
     end
 
     def start
       invalid_transition unless can_start?
-      apply(IssueProgressStarted.new(data: {issue_id: state.id}))
+      apply(IssueProgressStarted.new(data: { issue_id: state.id }))
     end
 
     def stop
       invalid_transition unless can_stop?
-      apply(IssueProgressStopped.new(data: {issue_id: state.id}))
+      apply(IssueProgressStopped.new(data: { issue_id: state.id }))
     end
 
     private
+
     attr_reader :state
 
     def invalid_transition

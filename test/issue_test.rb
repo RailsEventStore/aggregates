@@ -1,9 +1,9 @@
-require 'test_helper'
+require "test_helper"
 
 module ProjectManagement
   class IssueTest < MiniTest::Test
     include TestPlumbing
-    cover 'ProjectManagement::Issue*'
+    cover "ProjectManagement::Issue*"
 
     def test_create
       assert_opened { act(create_issue) }
@@ -169,7 +169,7 @@ module ProjectManagement
     end
 
     def issue_id
-      'c97a6121-f933-4609-9e96-e77dc2f67a16'
+      "c97a6121-f933-4609-9e96-e77dc2f67a16"
     end
 
     def issue_data
@@ -185,7 +185,7 @@ module ProjectManagement
     end
 
     def create_additional_issue
-      CreateIssue.new('96c785c9-5398-4010-b0ad-36bbd1d3f7a1')
+      CreateIssue.new("96c785c9-5398-4010-b0ad-36bbd1d3f7a1")
     end
 
     def reopen_issue
@@ -209,49 +209,41 @@ module ProjectManagement
     end
 
     def assert_error
-      assert_raises(Issue::InvalidTransition) do
-        yield
-      end
+      assert_raises(Issue::InvalidTransition) { yield }
     end
 
     def assert_version(version_number)
-      captured_events  = []
+      captured_events = []
       captured_version = nil
-      captured_stream  = nil
-      fake_publish     = ->(events, stream_name:, expected_version:) do
-        captured_events  = events
-        captured_stream  = stream_name
+      captured_stream = nil
+      fake_publish = ->(events, stream_name:, expected_version:) do
+        captured_events = events
+        captured_stream = stream_name
         captured_version = expected_version
       end
-      event_store.stub(:publish, fake_publish) do
-        yield
-      end
-      event_store.publish(captured_events, stream_name: captured_stream, expected_version: captured_version)
+      event_store.stub(:publish, fake_publish) { yield }
+      event_store.publish(
+        captured_events,
+        stream_name: captured_stream,
+        expected_version: captured_version
+      )
       assert_equal version_number, captured_version
     end
 
     def assert_opened
-      assert_events(stream_name, IssueOpened.new(data: issue_data)) do
-        yield
-      end
+      assert_events(stream_name, IssueOpened.new(data: issue_data)) { yield }
     end
 
     def assert_reopened
-      assert_events(stream_name, IssueReopened.new(data: issue_data)) do
-        yield
-      end
+      assert_events(stream_name, IssueReopened.new(data: issue_data)) { yield }
     end
 
     def assert_resolved
-      assert_events(stream_name, IssueResolved.new(data: issue_data)) do
-        yield
-      end
+      assert_events(stream_name, IssueResolved.new(data: issue_data)) { yield }
     end
 
     def assert_closed
-      assert_events(stream_name, IssueClosed.new(data: issue_data)) do
-        yield
-      end
+      assert_events(stream_name, IssueClosed.new(data: issue_data)) { yield }
     end
 
     def assert_started

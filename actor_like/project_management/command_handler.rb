@@ -5,42 +5,31 @@ module ProjectManagement
     end
 
     def create(cmd)
-      with_issue(cmd.id) do |issue|
-        issue.create(cmd.id)
-      end
+      with_issue(cmd.id) { |issue| issue.create(cmd.id) }
     end
 
     def resolve(cmd)
-      with_issue(cmd.id) do |issue|
-        issue.resolve
-      end
+      with_issue(cmd.id) { |issue| issue.resolve }
     end
 
     def close(cmd)
-      with_issue(cmd.id) do |issue|
-        issue.close
-      end
+      with_issue(cmd.id) { |issue| issue.close }
     end
 
     def reopen(cmd)
-      with_issue(cmd.id) do |issue|
-        issue.reopen
-      end
+      with_issue(cmd.id) { |issue| issue.reopen }
     end
 
     def start(cmd)
-      with_issue(cmd.id) do |issue|
-        issue.start
-      end
+      with_issue(cmd.id) { |issue| issue.start }
     end
 
     def stop(cmd)
-      with_issue(cmd.id) do |issue|
-        issue.stop
-      end
+      with_issue(cmd.id) { |issue| issue.stop }
     end
 
     private
+
     attr_reader :repo
 
     def with_issue(id)

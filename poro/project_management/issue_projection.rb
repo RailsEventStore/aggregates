@@ -9,7 +9,7 @@ module ProjectManagement
     def call(stream_name)
       RubyEventStore::Projection
         .from_stream(stream_name)
-        .init(->{ State.new(nil, -1) })
+        .init(-> { State.new(nil, -1) })
         .when(IssueOpened, method(:apply_opened))
         .when(IssueReopened, method(:apply_reopened))
         .when(IssueClosed, method(:apply_closed))

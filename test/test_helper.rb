@@ -1,9 +1,8 @@
-require 'minitest/autorun'
-require 'minitest/mock'
-require 'mutant/minitest/coverage'
-require 'arkency/command_bus'
-require_relative '../lib/project_management'
-
+require "minitest/autorun"
+require "minitest/mock"
+require "mutant/minitest/coverage"
+require "arkency/command_bus"
+require_relative "../lib/project_management"
 
 module ProjectManagement
   module TestPlumbing
@@ -11,7 +10,10 @@ module ProjectManagement
 
     def setup
       @command_bus = Arkency::CommandBus.new
-      @event_store = RubyEventStore::Client.new(repository: RubyEventStore::InMemoryRepository.new)
+      @event_store =
+        RubyEventStore::Client.new(
+          repository: RubyEventStore::InMemoryRepository.new
+        )
     end
 
     def arrange(*commands)
@@ -23,12 +25,14 @@ module ProjectManagement
     end
 
     def assert_events(stream_name, *expected_events)
-      scope  = event_store.read.stream(stream_name)
+      scope = event_store.read.stream(stream_name)
       before = scope.last
       yield
-      actual_events = before.nil? ? scope.to_a : scope.from(before.event_id).to_a
+      actual_events =
+        before.nil? ? scope.to_a : scope.from(before.event_id).to_a
       to_compare = ->(ev) { ev.to_h.slice(:type, :data) }
-      assert_equal expected_events.map(&to_compare), actual_events.map(&to_compare)
+      assert_equal expected_events.map(&to_compare),
+                   actual_events.map(&to_compare)
     end
   end
 end

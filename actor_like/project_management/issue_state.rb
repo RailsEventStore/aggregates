@@ -3,6 +3,7 @@ module ProjectManagement
     include AggregateState
 
     private
+
     on IssueOpened do |ev|
       self.id = ev.data.fetch(:issue_id)
       self.status = :open
