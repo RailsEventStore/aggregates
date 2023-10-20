@@ -1,7 +1,7 @@
 require "test_helper"
 
 module ProjectManagement
-  class IssueTest < MiniTest::Test
+  class IssueTest < Minitest::Test
     include TestPlumbing
     cover "ProjectManagement::Issue*"
 
