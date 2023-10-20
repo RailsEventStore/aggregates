@@ -8,7 +8,7 @@ on:
       - reopened
 jobs:
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
@@ -19,7 +19,7 @@ jobs:
           bundler-cache: true
       - run: make test_aggregate_root
   mutate:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
