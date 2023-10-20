@@ -111,8 +111,8 @@ mutate_rails_way:
 show_ui:
 	@bundle exec ruby ui/duck_typing_ui.rb
 
-test: test_aggregate_root test_query_based test_extracted_state test_functional test_polymorphic test_duck_typing test_yield_based test_actor_like test_repository test_poro test_rails_way
+test: test_aggregate_root test_query_based test_extracted_state test_functional test_polymorphic test_duck_typing test_yield_based test_actor_like test_repository test_poro test_rails_way test_roles
 
-mutate: mutate_aggregate_root mutate_query_based mutate_extracted_state mutate_functional mutate_polymorphic mutate_duck_typing mutate_yield_based mutate_actor_like mutate_repository mutate_poro mutate_rails_way
+mutate: mutate_aggregate_root mutate_query_based mutate_extracted_state mutate_functional mutate_polymorphic mutate_duck_typing mutate_yield_based mutate_actor_like mutate_repository mutate_poro mutate_rails_way mutate_roles
 
 .PHONY: test mutate
