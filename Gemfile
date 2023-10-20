@@ -12,3 +12,4 @@ gem "mutant-license",
 gem "mutant"
 gem "tty-prompt"
 gem "activerecord"
+gem "sqlite3"

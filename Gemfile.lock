@@ -58,6 +58,8 @@ GEM
     ruby_event_store (2.12.1)
       concurrent-ruby (~> 1.0, >= 1.1.6)
     sorbet-runtime (0.5.11081)
+    sqlite3 (1.6.7-arm64-darwin)
+    sqlite3 (1.6.7-x86_64-linux)
     timeout (0.4.0)
     tty-color (0.6.0)
     tty-cursor (0.7.1)
@@ -89,6 +91,7 @@ DEPENDENCIES
   mutant-license!
   mutant-minitest
   ruby_event_store
+  sqlite3
   tty-prompt
 
 RUBY VERSION
