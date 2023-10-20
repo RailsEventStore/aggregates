@@ -10,10 +10,7 @@ module ProjectManagement
 
     def setup
       @command_bus = Arkency::CommandBus.new
-      @event_store =
-        RubyEventStore::Client.new(
-          repository: RubyEventStore::InMemoryRepository.new
-        )
+      @event_store = RubyEventStore::Client.new
     end
 
     def arrange(*commands)
