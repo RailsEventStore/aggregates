@@ -68,7 +68,7 @@ module ProjectManagement
     end
 
     def can_create?
-      !state.open?
+      state.initial?
     end
 
     def apply(event)
