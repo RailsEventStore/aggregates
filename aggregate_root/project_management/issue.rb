@@ -11,107 +11,50 @@ module ProjectManagement
     end
 
     def create
-      invalid_transition unless can_create?
+      invalid_transition unless initial?
       apply(IssueOpened.new(data: { issue_id: @id }))
     end
 
     def resolve
-      invalid_transition unless can_resolve?
+      invalid_transition unless open? || reopened? || in_progress?
       apply(IssueResolved.new(data: { issue_id: @id }))
     end
 
     def close
-      invalid_transition unless can_close?
+      invalid_transition unless  open? || in_progress? || reopened? || resolved?
       apply(IssueClosed.new(data: { issue_id: @id }))
     end
 
     def reopen
-      invalid_transition unless can_reopen?
+      invalid_transition unless closed? || resolved?
       apply(IssueReopened.new(data: { issue_id: @id }))
     end
 
     def start
-      invalid_transition unless can_start?
+      invalid_transition unless  open? || reopened?
       apply(IssueProgressStarted.new(data: { issue_id: @id }))
     end
 
     def stop
-      invalid_transition unless can_stop?
+      invalid_transition unless in_progress?
       apply(IssueProgressStopped.new(data: { issue_id: @id }))
     end
 
     private
 
-    def invalid_transition
-      raise InvalidTransition
-    end
+    def invalid_transition = raise InvalidTransition
+    def initial? = @status.nil?
+    def open? = @status == :open
+    def closed? = @status == :closed
+    def in_progress? = @status == :in_progress
+    def reopened? = @status == :reopened
+    def resolved? = @status == :resolved
 
-    def open?
-      @status == :open
-    end
-
-    def closed?
-      @status == :closed
-    end
-
-    def in_progress?
-      @status == :in_progress
-    end
-
-    def reopened?
-      @status == :reopened
-    end
-
-    def resolved?
-      @status == :resolved
-    end
-
-    def can_reopen?
-      closed? || resolved?
-    end
-
-    def can_start?
-      open? || reopened?
-    end
-
-    def can_stop?
-      in_progress?
-    end
-
-    def can_close?
-      open? || in_progress? || reopened? || resolved?
-    end
-
-    def can_resolve?
-      open? || reopened? || in_progress?
-    end
-
-    def can_create?
-      @status.nil?
-    end
-
-    on IssueOpened do |ev|
-      @status = :open
-    end
-
-    on IssueResolved do |ev|
-      @status = :resolved
-    end
-
-    on IssueClosed do |ev|
-      @status = :closed
-    end
-
-    on IssueReopened do |ev|
-      @status = :reopened
-    end
-
-    on IssueProgressStarted do |ev|
-      @status = :in_progress
-    end
-
-    on IssueProgressStopped do |ev|
-      @status = :open
-    end
+    on(IssueOpened)          { |event| @status = :open }
+    on(IssueResolved)        { |event| @status = :resolved }
+    on(IssueClosed)          { |event| @status = :closed }
+    on(IssueReopened)        { |event| @status = :reopened }
+    on(IssueProgressStarted) { |event| @status = :in_progress }
+    on(IssueProgressStopped) { |event| @status = :open }
   end
 end
