@@ -80,23 +80,23 @@ module ProjectManagement
     end
 
     def open?
-      @status.equal? :open
+      @status == :open
     end
 
     def closed?
-      @status.equal? :closed
+      @status == :closed
     end
 
     def in_progress?
-      @status.equal? :in_progress
+      @status == :in_progress
     end
 
     def reopened?
-      @status.equal? :reopened
+      @status == :reopened
     end
 
     def resolved?
-      @status.equal? :resolved
+      @status == :resolved
     end
 
     def can_reopen?

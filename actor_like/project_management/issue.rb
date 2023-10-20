@@ -40,23 +40,23 @@ module ProjectManagement
     end
 
     def open?
-      state.status.equal? :open
+      state.status == :open
     end
 
     def closed?
-      state.status.equal? :closed
+      state.status == :closed
     end
 
     def in_progress?
-      state.status.equal? :in_progress
+      state.status == :in_progress
     end
 
     def reopened?
-      state.status.equal? :reopened
+      state.status == :reopened
     end
 
     def resolved?
-      state.status.equal? :resolved
+      state.status == :resolved
     end
 
     def can_reopen?

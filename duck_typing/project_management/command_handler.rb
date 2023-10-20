@@ -80,22 +80,22 @@ module ProjectManagement
         .read
         .stream(stream_name(id))
         .each do |event|
-        case event
-        when IssueOpened
-          issue = issue.open
-        when IssueProgressStarted
-          issue = issue.start
-        when IssueProgressStopped
-          issue = issue.stop
-        when IssueResolved
-          issue = issue.resolve
-        when IssueReopened
-          issue = issue.reopen
-        when IssueClosed
-          issue = issue.close
+          case event
+          when IssueOpened
+            issue = issue.open
+          when IssueProgressStarted
+            issue = issue.start
+          when IssueProgressStopped
+            issue = issue.stop
+          when IssueResolved
+            issue = issue.resolve
+          when IssueReopened
+            issue = issue.reopen
+          when IssueClosed
+            issue = issue.close
+          end
+          version += 1
         end
-        version += 1
-      end
       events = yield issue
       publish(events, id, version)
     end
