@@ -87,7 +87,7 @@ module ProjectManagement
     end
 
     def can_create?
-      !open?
+      @status.nil?
     end
 
     on IssueOpened do |ev|
