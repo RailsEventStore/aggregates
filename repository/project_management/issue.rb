@@ -120,7 +120,7 @@ module ProjectManagement
     end
 
     def can_create?
-      !open?
+      @status.nil?
     end
 
     def clear_changes
