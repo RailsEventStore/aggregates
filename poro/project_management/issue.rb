@@ -9,7 +9,7 @@ module ProjectManagement
     end
 
     def create
-      raise InvalidTransition unless !open?
+      raise InvalidTransition unless status.nil?
     end
 
     def resolve
