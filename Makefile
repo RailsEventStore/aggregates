@@ -17,8 +17,13 @@ $(addprefix test_, $(EXAMPLES)):
 $(addprefix mutate_, $(EXAMPLES)):
 	@make -C examples/$(subst mutate_,,$@) mutate
 
+$(addprefix install_, $(EXAMPLES)):
+	@make -C examples/$(subst install_,,$@) install
+
 show_ui:
 	@bundle exec ruby ui/duck_typing_ui.rb
+
+install: $(addprefix install_, $(EXAMPLES))
 
 test: $(addprefix test_, $(EXAMPLES))
 

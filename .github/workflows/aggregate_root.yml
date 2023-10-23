@@ -8,26 +8,34 @@ on:
       - reopened
 jobs:
   test:
+    env:
+      WORKING_DIRECTORY: examples/aggregate_root
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - run: test -e Gemfile.lock
+        working-directory: ${{ env.WORKING_DIRECTORY }}
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.2.2
           bundler-cache: true
+          working-directory: ${{ env.WORKING_DIRECTORY }}
       - run: make test
-        working-directory: examples/aggregate_root
+        working-directory: ${{ env.WORKING_DIRECTORY }}
   mutate:
+    env:
+      WORKING_DIRECTORY: examples/aggregate_root
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - run: test -e Gemfile.lock
+        working-directory: ${{ env.WORKING_DIRECTORY }}
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.2.2
           bundler-cache: true
+          working-directory: ${{ env.WORKING_DIRECTORY }}
       - run: make mutate
-        working-directory: examples/aggregate_root
+        working-directory: ${{ env.WORKING_DIRECTORY }}
