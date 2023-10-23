@@ -17,7 +17,8 @@ jobs:
         with:
           ruby-version: 3.2.2
           bundler-cache: true
-      - run: make test_query_based
+      - run: make test
+        working-directory: query_based
   mutate:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -28,4 +29,5 @@ jobs:
         with:
           ruby-version: 3.2.2
           bundler-cache: true
-      - run: make mutate_query_based
+      - run: make mutate
+        working-directory: query_based

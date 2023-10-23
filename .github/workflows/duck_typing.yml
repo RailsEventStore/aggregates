@@ -17,7 +17,8 @@ jobs:
         with:
           ruby-version: 3.2.2
           bundler-cache: true
-      - run: make test_duck_typing
+      - run: make test
+        working-directory: duck_typing
   mutate:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -28,4 +29,5 @@ jobs:
         with:
           ruby-version: 3.2.2
           bundler-cache: true
-      - run: make mutate_duck_typing
+      - run: make mutate
+        working-directory: duck_typing

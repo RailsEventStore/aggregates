@@ -12,20 +12,10 @@ EXAMPLES = actor_like \
            yield_based
 
 $(addprefix test_, $(EXAMPLES)):
-	@bundle exec ruby \
-		-I$(subst test_,,$@)/lib \
-		-rproject_management \
-		test/issue_test.rb
+	@make -C $(subst test_,,$@) test
 
 $(addprefix mutate_, $(EXAMPLES)):
-	@bundle exec mutant run \
-		--include $(subst mutate_,,$@)/lib
-
-mutate_extracted_state:
-	@bundle exec mutant run --include test \
-		--include extracted_state/lib \
-		--ignore-subject "ProjectManagement::Issue#apply_on_state" \
-		--ignore-subject "ProjectManagement::Issue#apply"
+	@make -C $(subst mutate_,,$@) mutate
 
 show_ui:
 	@bundle exec ruby ui/duck_typing_ui.rb
