@@ -2,6 +2,7 @@ require "minitest/autorun"
 require "minitest/mock"
 require "mutant/minitest/coverage"
 require "arkency/command_bus"
+require "ruby_event_store"
 
 module ProjectManagement
   module TestPlumbing
