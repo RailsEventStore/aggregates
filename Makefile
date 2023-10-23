@@ -20,13 +20,8 @@ $(addprefix mutate_, $(EXAMPLES)):
 $(addprefix install_, $(EXAMPLES)):
 	@make -C examples/$(subst install_,,$@) install
 
-show_ui:
-	@bundle exec ruby ui/duck_typing_ui.rb
-
 install: $(addprefix install_, $(EXAMPLES))
+test:    $(addprefix test_,    $(EXAMPLES))
+mutate:  $(addprefix mutate_,  $(EXAMPLES))
 
-test: $(addprefix test_, $(EXAMPLES))
-
-mutate:  $(addprefix mutate_, $(EXAMPLES))
-
-.PHONY: show_ui test mutate
+.PHONY: install test mutate
