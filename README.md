@@ -12,7 +12,7 @@ Quite typical workflow of an issue in a popular task tracking software (Jira).
 
 ### Classical example
 
-[source](aggregate_root)
+[source](examples/aggregate_root)
 
 - probably most recognized implementation (appeared in [Greg Young's CQRS example](https://github.com/gregoryyoung/m-r/blob/31d315faf272182d7567a038bbe832a73b879737/SimpleCQRS/Domain.cs#L63-L96))
 - does not expose its internal state via reader methods
@@ -22,7 +22,7 @@ Module source: https://github.com/RailsEventStore/rails_event_store/tree/5378b34
 
 ### Aggregate with exposed queries
 
-[source](query_based)
+[source](examples/query_based)
 
 - clear separation of state sourcing (with projection)
 - aggregate not aware of events
@@ -30,19 +30,19 @@ Module source: https://github.com/RailsEventStore/rails_event_store/tree/5378b34
 
 ### Aggregate with extracted state
 
-[source](extracted_state)
+[source](examples/extracted_state)
 
 - aggregate initialized with already sourced state
 
 ### Functional aggregate
 
-[source](functional)
+[source](examples/functional)
 
 - no single aggregate, just functions that take state and return events
 
 ### Polymorphic
 
-[source](polymorphic)
+[source](examples/polymorphic)
 
 - domain classes per each state
 - no messaging in domain classes
@@ -53,7 +53,7 @@ More: https://blog.arkency.com/make-your-ruby-code-more-modular-and-functional-w
 
 ### Duck typing
 
-[source](duck_typing)
+[source](examples/duck_typing)
 
 - domain classes per each state
 - no messaging in domain classes
@@ -62,14 +62,14 @@ More: https://blog.arkency.com/make-your-ruby-code-more-modular-and-functional-w
 
 ### Aggregate with yield
 
-[source](yield_based)
+[source](examples/yield_based)
 
 - yield is used to publish events (no unpublished_events in aggregate)
 - aggregate repository separated from logic
 
 ### Aggregate with repository
 
-[source](repository)
+[source](examples/repository)
 
 - aggregate is unware of infrastructure
 - aggregate can built itself from events (but it could be recreated in any way)
@@ -80,14 +80,14 @@ More: https://blog.arkency.com/make-your-ruby-code-more-modular-and-functional-w
 
 ### Roles/DCI
 
-[source](roles)
+[source](examples/roles)
 - better mental model by not having separate classes per state
 - one object which changes roles
 - `extend(Role.clone)` is used as Ruby ignores subsequent extend with the same module
 
 ### PORO with attributes
 
-[source](poro)
+[source](examples/poro)
 
 - clear separation of state sourcing (with projection)
 - aggregate not aware of events

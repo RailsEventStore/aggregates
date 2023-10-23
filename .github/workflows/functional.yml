@@ -18,7 +18,7 @@ jobs:
           ruby-version: 3.2.2
           bundler-cache: true
       - run: make test
-        working-directory: functional
+        working-directory: examples/functional
   mutate:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -30,4 +30,4 @@ jobs:
           ruby-version: 3.2.2
           bundler-cache: true
       - run: make mutate
-        working-directory: functional
+        working-directory: examples/functional

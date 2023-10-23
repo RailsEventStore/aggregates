@@ -12,10 +12,10 @@ EXAMPLES = actor_like \
            yield_based
 
 $(addprefix test_, $(EXAMPLES)):
-	@make -C $(subst test_,,$@) test
+	@make -C examples/$(subst test_,,$@) test
 
 $(addprefix mutate_, $(EXAMPLES)):
-	@make -C $(subst mutate_,,$@) mutate
+	@make -C examples/$(subst mutate_,,$@) mutate
 
 show_ui:
 	@bundle exec ruby ui/duck_typing_ui.rb
