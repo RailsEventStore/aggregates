@@ -13,7 +13,6 @@ EXAMPLES = actor_like \
 
 $(addprefix test_, $(EXAMPLES)):
 	@bundle exec ruby \
-		-Itest \
 		-I$(subst test_,,$@)/lib \
 		-rproject_management \
 		test/issue_test.rb
