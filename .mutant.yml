@@ -1,7 +1,0 @@
-integration:
-  name: minitest
-requires:
-- project_management
-matcher:
-  subjects:
-  - ProjectManagement*
