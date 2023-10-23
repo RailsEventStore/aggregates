@@ -19,17 +19,13 @@ $(addprefix test_, $(EXAMPLES)):
 
 $(addprefix mutate_, $(EXAMPLES)):
 	@bundle exec mutant run \
-		--include $(subst mutate_,,$@)/lib \
-		--require project_management \
-		--use minitest "ProjectManagement*"
+		--include $(subst mutate_,,$@)/lib
 
 mutate_extracted_state:
 	@bundle exec mutant run --include test \
 		--include extracted_state/lib \
-		--require project_management \
 		--ignore-subject "ProjectManagement::Issue#apply_on_state" \
-		--ignore-subject "ProjectManagement::Issue#apply" \
-		--use minitest "ProjectManagement*"
+		--ignore-subject "ProjectManagement::Issue#apply"
 
 show_ui:
 	@bundle exec ruby ui/duck_typing_ui.rb
