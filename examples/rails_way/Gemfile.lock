@@ -55,6 +55,7 @@ GEM
       concurrent-ruby (~> 1.0, >= 1.1.6)
     sorbet-runtime (0.5.11089)
     sqlite3 (1.6.7-arm64-darwin)
+    sqlite3 (1.6.7-x86_64-linux)
     timeout (0.4.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -64,6 +65,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-22
+  x86_64-linux
 
 DEPENDENCIES
   activerecord
