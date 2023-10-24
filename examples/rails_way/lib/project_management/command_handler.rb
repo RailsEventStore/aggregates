@@ -47,23 +47,21 @@ module ProjectManagement
 
     private
 
-    def stream_name(id)
-      "Issue$#{id}"
+    def publish(events, id)
+      @event_store.publish(events, stream_name: "Issue$#{id}")
     end
 
     def create_issue(id)
       Issue.create!(uuid: id)
-      events = yield
-      @event_store.publish(events, stream_name: stream_name(id))
+      publish(yield, id)
     rescue ActiveRecord::RecordNotUnique
       raise Issue::InvalidTransition
     end
 
     def load_issue(id)
       issue = Issue.find_by!(uuid: id)
-      events = yield issue
+      publish(yield(issue), id)
       issue.save!
-      @event_store.publish(events, stream_name: stream_name(id))
     rescue AASM::InvalidTransition, ActiveRecord::RecordNotFound
       raise Issue::InvalidTransition
     end
