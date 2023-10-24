@@ -13,10 +13,6 @@ module ProjectManagement
       @event_store = RubyEventStore::Client.new
     end
 
-    def arrange(*commands)
-      commands.each { |command| act(command) }
-    end
-
     def act(command)
       command_bus.(command)
     end
