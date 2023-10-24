@@ -1,11 +1,5 @@
-require_relative "test_helper"
-
 module ProjectManagement
-  class IssueTest < Minitest::Test
-    include TestPlumbing
-
-    cover "ProjectManagement::Issue*"
-
+  module SharedTests
     def test_impossible_initial_transitions
       assert_error { start_issue_progress }
       assert_error { stop_issue_progress }
@@ -248,11 +242,6 @@ module ProjectManagement
 
     private
 
-    def setup
-      super
-      Configuration.new.(event_store, command_bus)
-    end
-
     def issue_id = "c97a6121-f933-4609-9e96-e77dc2f67a16"
 
     def additional_issue_id = "96c785c9-5398-4010-b0ad-36bbd1d3f7a1"
@@ -263,8 +252,7 @@ module ProjectManagement
 
     def create_issue = command_bus.(CreateIssue.new(issue_id))
 
-    def create_additional_issue =
-      command_bus.(CreateIssue.new(additional_issue_id))
+    def create_additional_issue = command_bus.(CreateIssue.new(additional_issue_id))
 
     def reopen_issue = command_bus.(ReopenIssue.new(issue_id))
 
