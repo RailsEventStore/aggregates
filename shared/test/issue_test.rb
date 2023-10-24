@@ -6,270 +6,237 @@ module ProjectManagement
 
     cover "ProjectManagement::Issue*"
 
-    def test_create
-      assert_opened { create_issue }
-    end
-
-    def test_close
+    def test_impossible_initial_transitions
+      assert_error { start_issue_progress }
+      assert_error { stop_issue_progress }
       assert_error { close_issue }
-    end
-
-    def test_resolve
+      assert_error { reopen_issue }
       assert_error { resolve_issue }
     end
 
-    def test_start
-      assert_error { start_issue_progress }
+    def test_open_from_initial
+      create_issue
+
+      assert_events issue_opened
     end
 
-    def test_stop
-      assert_error { stop_issue_progress }
-    end
-
-    def test_reopen
-      assert_error { reopen_issue }
-    end
-
-    def test_start_from_stopped
+    def test_open_from_in_progress
       create_issue
       start_issue_progress
       stop_issue_progress
 
-      assert_started { start_issue_progress }
+      assert_events issue_opened, issue_progress_started, issue_progress_stopped
     end
 
-    def test_create_from_open
+    def test_open_impossible_transitions
       create_issue
 
       assert_error { create_issue }
-    end
-
-    def test_create_from_resolved
-      create_issue
-      resolve_issue
-
-      assert_error { create_issue }
-    end
-
-    def test_create_from_in_progress
-      create_issue
-      start_issue_progress
-
-      assert_error { create_issue }
-    end
-
-    def test_create_from_closed
-      create_issue
-      close_issue
-
-      assert_error { create_issue }
-    end
-
-    def test_reopen_from_in_progress
-      create_issue
-      start_issue_progress
+      assert_error { stop_issue_progress }
       assert_error { reopen_issue }
     end
 
-    def test_resolve_from_opened
-      create_issue
-      assert_resolved { resolve_issue }
-    end
-
-    def test_resolve_from_in_progress
-      create_issue
-      start_issue_progress
-
-      assert_resolved { resolve_issue }
-    end
-
-    def test_resolve_from_reopened
-      create_issue
-      close_issue
-      reopen_issue
-
-      assert_resolved { resolve_issue }
-    end
-
-    def test_resolve_from_resolved
+    def test_resolved_from_open
       create_issue
       resolve_issue
 
+      assert_events issue_opened, issue_resolved
+    end
+
+    def test_resolved_from_in_progress
+      create_issue
+      start_issue_progress
+      resolve_issue
+
+      assert_events issue_opened, issue_progress_started, issue_resolved
+    end
+
+    def test_resolved_from_reopened
+      create_issue
+      close_issue
+      reopen_issue
+      resolve_issue
+
+      assert_events issue_opened, issue_closed, issue_reopened, issue_resolved
+    end
+
+    def test_resolved_impossible_transitions
+      create_issue
+      resolve_issue
+
+      assert_error { create_issue }
+      assert_error { start_issue_progress }
+      assert_error { stop_issue_progress }
       assert_error { resolve_issue }
     end
 
-    def test_resolve_from_closed
+    def test_closed_from_open
       create_issue
       close_issue
 
-      assert_error { resolve_issue }
+      assert_events issue_opened, issue_closed
     end
 
-    def test_start_from_opened
+    def test_closed_from_in_progress
       create_issue
+      start_issue_progress
+      close_issue
 
-      assert_started { start_issue_progress }
+      assert_events issue_opened, issue_progress_started, issue_closed
     end
 
-    def test_start_from_reopened
+    def test_closed_from_resolved
+      create_issue
+      resolve_issue
+      close_issue
+
+      assert_events issue_opened, issue_resolved, issue_closed
+    end
+
+    def test_closed_from_reopened
       create_issue
       close_issue
       reopen_issue
-      assert_started { start_issue_progress }
+      close_issue
+
+      assert_events issue_opened, issue_closed, issue_reopened, issue_closed
     end
 
-    def test_start_from_in_progress
-      create_issue
-      start_issue_progress
-      assert_error { start_issue_progress }
-    end
-
-    def test_start_from_resolved
-      create_issue
-      resolve_issue
-
-      assert_error { start_issue_progress }
-    end
-
-    def test_start_from_closed
+    def test_closed_impossible_transitions
       create_issue
       close_issue
 
+      assert_error { create_issue }
       assert_error { start_issue_progress }
-    end
-
-    def test_close_from_opened
-      create_issue
-
-      assert_closed { close_issue }
-    end
-
-    def test_close_from_resolved
-      create_issue
-      resolve_issue
-
-      assert_closed { close_issue }
-    end
-
-    def test_close_from_started
-      create_issue
-      start_issue_progress
-
-      assert_closed { close_issue }
-    end
-
-    def test_close_from_reopened
-      create_issue
-      close_issue
-      reopen_issue
-
-      assert_closed { close_issue }
-    end
-
-    def test_close_from_closed
-      create_issue
-      close_issue
-
+      assert_error { stop_issue_progress }
       assert_error { close_issue }
+      assert_error { resolve_issue }
     end
 
-    def test_stop_from_started
+    def test_in_progress_from_open
       create_issue
       start_issue_progress
 
-      assert_stopped { stop_issue_progress }
+      assert_events issue_opened, issue_progress_started
     end
 
-    def test_stop_from_open
-      create_issue
-
-      assert_error { stop_issue_progress }
-    end
-
-    def test_stop_from_resolved
-      create_issue
-      resolve_issue
-
-      assert_error { stop_issue_progress }
-    end
-
-    def test_stop_from_closed
-      create_issue
-      close_issue
-
-      assert_error { stop_issue_progress }
-    end
-
-    def test_reopen_from_closed
-      create_issue
-      close_issue
-
-      assert_reopened { reopen_issue }
-    end
-
-    def test_reopen_from_resolved
-      create_issue
-      resolve_issue
-
-      assert_reopened { reopen_issue }
-    end
-
-    def test_reopen_from_reopened
+    def test_in_progress_from_reopened
       create_issue
       close_issue
       reopen_issue
+      start_issue_progress
 
+      assert_events issue_opened,
+                    issue_closed,
+                    issue_reopened,
+                    issue_progress_started
+    end
+
+    def test_in_progress_impossible_transitions
+      create_issue
+      start_issue_progress
+
+      assert_error { create_issue }
+      assert_error { start_issue_progress }
       assert_error { reopen_issue }
     end
 
-    def test_close_from_create_start_resolved
+    def test_reopened_from_closed
       create_issue
-      start_issue_progress
-      resolve_issue
+      close_issue
+      reopen_issue
 
-      assert_closed { close_issue }
+      assert_events issue_opened, issue_closed, issue_reopened
     end
 
-    def test_start_from_create_start_resolved_reopen
+    def test_reopened_from_resolved
+      create_issue
+      resolve_issue
+      reopen_issue
+
+      assert_events issue_opened, issue_resolved, issue_reopened
+    end
+
+    def test_reopened_impossible_transitions
+      create_issue
+      close_issue
+      reopen_issue
+
+      assert_error { create_issue }
+      assert_error { stop_issue_progress }
+      assert_error { reopen_issue }
+    end
+
+    def test_in_progress_from_open_after_progress_stopped
+      create_issue
+      start_issue_progress
+      stop_issue_progress
+      start_issue_progress
+
+      assert_events issue_opened,
+                    issue_progress_started,
+                    issue_progress_stopped,
+                    issue_progress_started
+    end
+
+    def test_in_progress_from_open_after_resolved_and_reopened
       create_issue
       start_issue_progress
       resolve_issue
       reopen_issue
+      start_issue_progress
 
-      assert_started { start_issue_progress }
+      assert_events issue_opened,
+                    issue_progress_started,
+                    issue_resolved,
+                    issue_reopened,
+                    issue_progress_started
     end
 
-    def test_start_from_create_start_resolved_closed
+    def test_reopened_from_closed_after_progress_started
+      create_issue
+      start_issue_progress
+      close_issue
+      reopen_issue
+
+      assert_events issue_opened,
+                    issue_progress_started,
+                    issue_closed,
+                    issue_reopened
+    end
+
+    def test_reopened_from_closed_after_progress_started_and_resolved
+      create_issue
+      start_issue_progress
+      resolve_issue
+      close_issue
+      reopen_issue
+
+      assert_events issue_opened,
+                    issue_progress_started,
+                    issue_resolved,
+                    issue_closed,
+                    issue_reopened
+    end
+
+    def test_closed_from_resolved_after_progress_started
       create_issue
       start_issue_progress
       resolve_issue
       close_issue
 
-      assert_reopened { reopen_issue }
-    end
-
-    def test_start_from_create_start_closed
-      create_issue
-      start_issue_progress
-      close_issue
-
-      assert_reopened { reopen_issue }
-    end
-
-    def test_close_from_create_start_resolved_closed
-      create_issue
-      start_issue_progress
-      resolve_issue
-      close_issue
-
-      assert_error { close_issue }
+      assert_events issue_opened,
+                    issue_progress_started,
+                    issue_resolved,
+                    issue_closed
     end
 
     def test_stream_isolation
       create_issue
       create_additional_issue
+      resolve_issue
 
-      assert_resolved { resolve_issue }
+      assert_events issue_opened, issue_resolved
     end
 
     def test_passed_expected_version
@@ -294,43 +261,39 @@ module ProjectManagement
 
     def stream_name = "Issue$#{issue_id}"
 
-    def create_issue = act(CreateIssue.new(issue_id))
+    def create_issue = command_bus.(CreateIssue.new(issue_id))
 
-    def create_additional_issue = act(CreateIssue.new(additional_issue_id))
+    def create_additional_issue =
+      command_bus.(CreateIssue.new(additional_issue_id))
 
-    def reopen_issue = act(ReopenIssue.new(issue_id))
+    def reopen_issue = command_bus.(ReopenIssue.new(issue_id))
 
-    def close_issue = act(CloseIssue.new(issue_id))
+    def close_issue = command_bus.(CloseIssue.new(issue_id))
 
-    def resolve_issue = act(ResolveIssue.new(issue_id))
+    def resolve_issue = command_bus.(ResolveIssue.new(issue_id))
 
-    def start_issue_progress = act(StartIssueProgress.new(issue_id))
+    def start_issue_progress = command_bus.(StartIssueProgress.new(issue_id))
 
-    def stop_issue_progress = act(StopIssueProgress.new(issue_id))
+    def stop_issue_progress = command_bus.(StopIssueProgress.new(issue_id))
 
-    def assert_error = assert_raises(Issue::InvalidTransition) { yield }
+    def issue_opened = IssueOpened.new(data: issue_data)
 
-    def assert_opened =
-      assert_events(stream_name, IssueOpened.new(data: issue_data)) { yield }
+    def issue_reopened = IssueReopened.new(data: issue_data)
 
-    def assert_reopened =
-      assert_events(stream_name, IssueReopened.new(data: issue_data)) { yield }
+    def issue_resolved = IssueResolved.new(data: issue_data)
 
-    def assert_resolved =
-      assert_events(stream_name, IssueResolved.new(data: issue_data)) { yield }
+    def issue_closed = IssueClosed.new(data: issue_data)
 
-    def assert_closed =
-      assert_events(stream_name, IssueClosed.new(data: issue_data)) { yield }
+    def issue_progress_started = IssueProgressStarted.new(data: issue_data)
 
-    def assert_started =
-      assert_events(stream_name, IssueProgressStarted.new(data: issue_data)) do
-        yield
-      end
+    def issue_progress_stopped = IssueProgressStopped.new(data: issue_data)
 
-    def assert_stopped =
-      assert_events(stream_name, IssueProgressStopped.new(data: issue_data)) do
-        yield
-      end
+    def assert_error(&) = assert_raises(Issue::InvalidTransition, &)
+
+    def assert_events(*events, comparable: ->(e) { [e.event_type, e.data] })
+      assert_equal events.map(&comparable),
+                   event_store.read.stream(stream_name).map(&comparable)
+    end
 
     def assert_version(version_number)
       captured_events = []
