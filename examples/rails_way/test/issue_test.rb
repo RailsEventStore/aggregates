@@ -40,6 +40,8 @@ module ProjectManagement
           t.string :uuid
           t.string :state
         end
+
+        add_index :issues, :uuid, unique: true
       end
     end
   end

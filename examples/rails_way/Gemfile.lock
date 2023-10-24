@@ -6,6 +6,8 @@ GEM
 GEM
   remote: https://rubygems.org/
   specs:
+    aasm (5.5.0)
+      concurrent-ruby (~> 1.0)
     activemodel (7.1.1)
       activesupport (= 7.1.1)
     activerecord (7.1.1)
@@ -68,6 +70,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  aasm
   activerecord
   arkency-command_bus
   minitest
