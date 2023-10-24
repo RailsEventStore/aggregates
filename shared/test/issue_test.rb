@@ -3,6 +3,7 @@ require_relative "test_helper"
 module ProjectManagement
   class IssueTest < Minitest::Test
     include TestPlumbing
+
     cover "ProjectManagement::Issue*"
 
     def test_create
@@ -213,49 +214,41 @@ module ProjectManagement
       Configuration.new.(event_store, command_bus)
     end
 
-    def issue_id
-      "c97a6121-f933-4609-9e96-e77dc2f67a16"
-    end
+    def issue_id = "c97a6121-f933-4609-9e96-e77dc2f67a16"
 
-    def issue_data
-      { issue_id: issue_id }
-    end
+    def additional_issue_id = "96c785c9-5398-4010-b0ad-36bbd1d3f7a1"
 
-    def stream_name
-      "Issue$#{issue_id}"
-    end
+    def issue_data = { issue_id: issue_id }
 
-    def create_issue
-      CreateIssue.new(issue_id)
-    end
+    def stream_name = "Issue$#{issue_id}"
 
-    def create_additional_issue
-      CreateIssue.new("96c785c9-5398-4010-b0ad-36bbd1d3f7a1")
-    end
+    def create_issue = CreateIssue.new(issue_id)
 
-    def reopen_issue
-      ReopenIssue.new(issue_id)
-    end
+    def create_additional_issue = CreateIssue.new(additional_issue_id)
 
-    def close_issue
-      CloseIssue.new(issue_id)
-    end
+    def reopen_issue = ReopenIssue.new(issue_id)
 
-    def resolve_issue
-      ResolveIssue.new(issue_id)
-    end
+    def close_issue = CloseIssue.new(issue_id)
 
-    def start_issue_progress
-      StartIssueProgress.new(issue_id)
-    end
+    def resolve_issue = ResolveIssue.new(issue_id)
 
-    def stop_issue_progress
-      StopIssueProgress.new(issue_id)
-    end
+    def start_issue_progress = StartIssueProgress.new(issue_id)
 
-    def assert_error
-      assert_raises(Issue::InvalidTransition) { yield }
-    end
+    def stop_issue_progress = StopIssueProgress.new(issue_id)
+
+    def assert_error = assert_raises(Issue::InvalidTransition) { yield }
+
+    def assert_opened = assert_events(stream_name, IssueOpened.new(data: issue_data)) { yield }
+
+    def assert_reopened = assert_events(stream_name, IssueReopened.new(data: issue_data)) { yield }
+
+    def assert_resolved = assert_events(stream_name, IssueResolved.new(data: issue_data)) { yield }
+
+    def assert_closed = assert_events(stream_name, IssueClosed.new(data: issue_data)) { yield }
+
+    def assert_started = assert_events(stream_name, IssueProgressStarted.new(data: issue_data)) { yield }
+
+    def assert_stopped = assert_events(stream_name, IssueProgressStopped.new(data: issue_data)) { yield }
 
     def assert_version(version_number)
       captured_events = []
@@ -273,34 +266,6 @@ module ProjectManagement
         expected_version: captured_version
       )
       assert_equal version_number, captured_version
-    end
-
-    def assert_opened
-      assert_events(stream_name, IssueOpened.new(data: issue_data)) { yield }
-    end
-
-    def assert_reopened
-      assert_events(stream_name, IssueReopened.new(data: issue_data)) { yield }
-    end
-
-    def assert_resolved
-      assert_events(stream_name, IssueResolved.new(data: issue_data)) { yield }
-    end
-
-    def assert_closed
-      assert_events(stream_name, IssueClosed.new(data: issue_data)) { yield }
-    end
-
-    def assert_started
-      assert_events(stream_name, IssueProgressStarted.new(data: issue_data)) do
-        yield
-      end
-    end
-
-    def assert_stopped
-      assert_events(stream_name, IssueProgressStopped.new(data: issue_data)) do
-        yield
-      end
     end
   end
 end
