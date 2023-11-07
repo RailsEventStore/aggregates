@@ -1,3 +1,9 @@
 source "https://rubygems.org"
 
-eval_gemfile "../../shared/Gemfile"
+gem "ruby_event_store"
+gem "arkency-command_bus"
+gem "minitest"
+gem "mutant"
+gem "mutant-minitest"
+gem "mutant-license",
+    source: "https://oss:7AXfeZdAfCqL1PvHm2nvDJO6Zd9UW8IK@gem.mutant.dev"
