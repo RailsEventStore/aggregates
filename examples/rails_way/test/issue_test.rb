@@ -8,7 +8,7 @@ require_relative "../lib/project_management"
 
 module ProjectManagement
   class IssueTest < Minitest::Test
-    include SharedTests.with(
+    include Test.with(
               command_bus: -> { Arkency::CommandBus.new },
               event_store: -> { RubyEventStore::Client.new },
               configuration: Configuration.new

@@ -16,4 +16,4 @@ module ProjectManagement
   IssueProgressStopped = Class.new(RubyEventStore::Event)
 end
 
-require_relative "project_management/shared_tests"
+require_relative "project_management/test"

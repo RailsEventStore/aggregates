@@ -1,5 +1,5 @@
 module ProjectManagement
-  module SharedTests
+  module Test
     def self.with(command_bus:, event_store:, configuration:)
       Module.new do
         attr_reader :event_store, :command_bus
