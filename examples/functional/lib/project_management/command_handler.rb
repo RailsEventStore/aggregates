@@ -48,6 +48,8 @@ module ProjectManagement
         end
       events = yield state
       event_store.publish(events, stream_name: stream_name(id), expected_version: version)
+    rescue Issue::InvalidTransition
+      raise Command::Rejected
     end
   end
 end

@@ -1,9 +1,4 @@
 module ProjectManagement
-  class Issue
-    class InvalidTransition < StandardError
-    end
-  end
-
   class CommandHandler
     def initialize(event_store)
       @event_store = event_store
@@ -82,6 +77,8 @@ module ProjectManagement
         end
       events = yield issue
       publish(events, id, version)
+    rescue Issue::InvalidTransition
+      raise Command::Rejected
     end
 
     def publish(events, id, version)

@@ -1,5 +1,7 @@
 module ProjectManagement
   class Issue
+    InvalidTransition = Class.new(StandardError)
+
     def open = extend(Open.clone)
     def start = fail
     def resolve = fail

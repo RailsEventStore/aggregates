@@ -49,7 +49,7 @@ module ProjectManagement
       Issue.create!(uuid: id)
       @event_store.publish(yield, stream_name: "Issue$#{id}")
     rescue ActiveRecord::RecordNotUnique
-      raise Issue::InvalidTransition
+      raise Command::Rejected
     end
 
     def load_issue(id)
@@ -57,7 +57,7 @@ module ProjectManagement
       @event_store.publish(yield(issue), stream_name: "Issue$#{id}")
       issue.save!
     rescue AASM::InvalidTransition, ActiveRecord::RecordNotFound
-      raise Issue::InvalidTransition
+      raise Command::Rejected
     end
   end
 end

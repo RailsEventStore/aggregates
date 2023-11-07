@@ -1,7 +1,5 @@
 module ProjectManagement
   class Issue < ActiveRecord::Base
-    InvalidTransition = Class.new(StandardError)
-
     include AASM
 
     aasm column: :state do

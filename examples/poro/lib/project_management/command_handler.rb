@@ -1,7 +1,5 @@
 module ProjectManagement
   class CommandHandler
-    InvalidTransition = Class.new(StandardError)
-
     def initialize(event_store)
       @event_store = event_store
     end
@@ -60,6 +58,8 @@ module ProjectManagement
       state = IssueProjection.new(event_store).call(stream_name(id))
       event = yield Issue.new(state.status)
       event_store.publish(event, stream_name: stream_name(id), expected_version: state.version)
+    rescue Issue::InvalidTransition
+      raise Command::Rejected
     end
   end
 end

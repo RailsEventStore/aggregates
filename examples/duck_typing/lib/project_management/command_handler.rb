@@ -1,9 +1,4 @@
 module ProjectManagement
-  class Issue
-    class InvalidTransition < StandardError
-    end
-  end
-
   class CommandHandler
     def initialize(event_store)
       @event_store = event_store
@@ -66,7 +61,7 @@ module ProjectManagement
     private
 
     def raise_invalid
-      raise Issue::InvalidTransition
+      raise Command::Rejected
     end
 
     def stream_name(id)

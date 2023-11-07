@@ -37,6 +37,8 @@ module ProjectManagement
       issue = Issue.load(id, events)
       yield issue
       repository.save(id, current_version, issue.changes)
+    rescue Issue::InvalidTransition
+      raise Command::Rejected
     end
   end
 end

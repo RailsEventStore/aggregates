@@ -266,7 +266,7 @@ module ProjectManagement
 
         def issue_progress_stopped = IssueProgressStopped.new(data: issue_data)
 
-        def assert_error(&) = assert_raises(Issue::InvalidTransition, &)
+        def assert_error(&) = assert_raises(Command::Rejected, &)
 
         def assert_events(*events, comparable: ->(e) { [e.event_type, e.data] })
           assert_equal events.map(&comparable), event_store.read.stream(stream_name).map(&comparable)

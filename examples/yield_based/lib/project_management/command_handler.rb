@@ -35,6 +35,8 @@ module ProjectManagement
     def with_issue(id)
       stream = "Issue$#{id}"
       repo.with_aggregate(Issue.new, stream) { |issue, store| yield issue, store }
+    rescue Issue::InvalidTransition
+      raise Command::Rejected
     end
   end
 end

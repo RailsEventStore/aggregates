@@ -15,6 +15,8 @@ module ProjectManagement
 
     def with_aggregate(id, &block)
       @repository.with_aggregate(Issue.new(id), "Issue$#{id}", &block)
+    rescue Issue::InvalidTransition
+      raise Command::Rejected
     end
   end
 end

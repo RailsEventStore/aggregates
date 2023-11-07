@@ -1,5 +1,7 @@
 module ProjectManagement
-  Command = Data.define(:id)
+  class Command < Data.define(:id)
+    Rejected = Class.new(StandardError)
+  end
 
   CreateIssue = Class.new(Command)
   ResolveIssue = Class.new(Command)
