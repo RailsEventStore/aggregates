@@ -59,27 +59,29 @@ module ProjectManagement
 
     def load_issue(id)
       version = -1
-      issue = Issue.new
-      @event_store
-        .read
-        .stream(stream_name(id))
-        .each.with_index do |event, idx|
-          version = idx
-          case event
-          when IssueOpened
-            issue = issue.open
-          when IssueProgressStarted
-            issue = issue.start
-          when IssueProgressStopped
-            issue = issue.stop
-          when IssueResolved
-            issue = issue.resolve
-          when IssueReopened
-            issue = issue.reopen
-          when IssueClosed
-            issue = issue.close
+      issue =
+        @event_store
+          .read
+          .stream(stream_name(id))
+          .each
+          .with_index
+          .reduce(Issue.new) do |issue, (event, idx)|
+            version = idx
+            case event
+            when IssueOpened
+              issue.open
+            when IssueProgressStarted
+              issue.start
+            when IssueProgressStopped
+              issue.stop
+            when IssueResolved
+              issue.resolve
+            when IssueReopened
+              issue.reopen
+            when IssueClosed
+              issue.close
+            end
           end
-        end
       events = yield issue
       publish(events, id, version)
     end
