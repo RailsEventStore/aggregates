@@ -7,3 +7,9 @@ requires:
 matcher:
   subjects:
   - ProjectManagement*
+  ignore:
+  - ProjectManagement::Issue#open
+  - ProjectManagement::Open*
+  - ProjectManagement::InProgress*
+  - ProjectManagement::Resolved*
+  - ProjectManagement::Closed*
