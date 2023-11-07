@@ -36,7 +36,7 @@ module ProjectManagement
       stream = "Issue$#{id}"
       repo.with_state(IssueState.new, stream) { |state, store| yield Issue.new(state).link(store) }
     rescue Issue::InvalidTransition
-      raise Command::Rejected
+      raise Error
     end
   end
 end

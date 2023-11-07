@@ -59,7 +59,7 @@ module ProjectManagement
       event = yield Issue.new(state.status)
       event_store.publish(event, stream_name: stream_name(id), expected_version: state.version)
     rescue Issue::InvalidTransition
-      raise Command::Rejected
+      raise Error
     end
   end
 end

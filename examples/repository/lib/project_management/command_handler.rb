@@ -38,7 +38,7 @@ module ProjectManagement
       yield issue
       repository.save(id, current_version, issue.changes)
     rescue Issue::InvalidTransition
-      raise Command::Rejected
+      raise Error
     end
   end
 end

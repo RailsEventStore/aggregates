@@ -78,7 +78,7 @@ module ProjectManagement
       events = yield issue
       publish(events, id, version)
     rescue Issue::InvalidTransition
-      raise Command::Rejected
+      raise Error
     end
 
     def publish(events, id, version)

@@ -1,7 +1,5 @@
 module ProjectManagement
-  class Command < Data.define(:id)
-    Rejected = Class.new(StandardError)
-  end
+  Command = Data.define(:id)
 
   CreateIssue = Class.new(Command)
   ResolveIssue = Class.new(Command)
@@ -9,4 +7,6 @@ module ProjectManagement
   ReopenIssue = Class.new(Command)
   StartIssueProgress = Class.new(Command)
   StopIssueProgress = Class.new(Command)
+
+  CommandRejected = Class.new(StandardError)
 end

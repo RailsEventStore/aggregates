@@ -61,7 +61,7 @@ module ProjectManagement
     private
 
     def raise_invalid
-      raise Command::Rejected
+      raise Error
     end
 
     def stream_name(id)
