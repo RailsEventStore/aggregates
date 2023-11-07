@@ -63,7 +63,8 @@ module ProjectManagement
       @event_store
         .read
         .stream(stream_name(id))
-        .each do |event|
+        .each.with_index do |event, idx|
+          version = idx
           case event
           when IssueOpened
             issue = issue.open
@@ -78,7 +79,6 @@ module ProjectManagement
           when IssueClosed
             issue = issue.close
           end
-          version += 1
         end
       events = yield issue
       publish(events, id, version)
