@@ -1,6 +1,10 @@
-include ../../shared/Makefile
+install:
+	@bundle install
 
-ui:
-	@bundle exec ruby -Ilib -rproject_management -e "ProjectManagement::UI.new.show"
+test:
+	@bundle exec ruby -Ilib -rproject_management test/issue_test.rb
 
-.PHONY: ui
+mutate:
+	@bundle exec mutant run
+
+.PHONY: install test mutate
