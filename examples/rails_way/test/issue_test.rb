@@ -10,10 +10,10 @@ require_relative "../../../shared/test/shared_tests"
 module ProjectManagement
   class IssueTest < Minitest::Test
     include SharedTests.with(
-      command_bus: ->{ Arkency::CommandBus.new },
-      event_store: ->{ RubyEventStore::Client.new },
-      configuration: Configuration.new
-    )
+              command_bus: -> { Arkency::CommandBus.new },
+              event_store: -> { RubyEventStore::Client.new },
+              configuration: Configuration.new
+            )
 
     cover "ProjectManagement::Issue*"
 
