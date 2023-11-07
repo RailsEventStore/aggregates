@@ -1,11 +1,11 @@
 integration:
   name: minitest
 includes:
-- lib
+  - lib
 requires:
-- project_management
+  - project_management
 matcher:
   subjects:
-  - ProjectManagement*
+    - ProjectManagement*
   ignore:
-  - ProjectManagement::UI*
+    - ProjectManagement::UI*

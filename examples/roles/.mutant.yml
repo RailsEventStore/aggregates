@@ -1,15 +1,15 @@
 integration:
   name: minitest
 includes:
-- lib
+  - lib
 requires:
-- project_management
+  - project_management
 matcher:
   subjects:
-  - ProjectManagement*
+    - ProjectManagement*
   ignore:
-  - ProjectManagement::Issue#open
-  - ProjectManagement::Open*
-  - ProjectManagement::InProgress*
-  - ProjectManagement::Resolved*
-  - ProjectManagement::Closed*
+    - ProjectManagement::Issue#open
+    - ProjectManagement::Open*
+    - ProjectManagement::InProgress*
+    - ProjectManagement::Resolved*
+    - ProjectManagement::Closed*
