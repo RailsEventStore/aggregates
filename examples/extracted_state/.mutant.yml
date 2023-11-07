@@ -10,3 +10,4 @@ matcher:
   ignore:
     - ProjectManagement::Issue#apply_on_state
     - ProjectManagement::Issue#apply
+    - ProjectManagement::Test*

@@ -7,3 +7,5 @@ requires:
 matcher:
   subjects:
   - ProjectManagement*
+  ignore:
+    - ProjectManagement::Test*

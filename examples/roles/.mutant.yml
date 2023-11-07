@@ -13,3 +13,4 @@ matcher:
     - ProjectManagement::InProgress*
     - ProjectManagement::Resolved*
     - ProjectManagement::Closed*
+    - ProjectManagement::Test*

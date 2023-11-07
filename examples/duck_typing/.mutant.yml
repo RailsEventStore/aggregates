@@ -9,3 +9,4 @@ matcher:
     - ProjectManagement*
   ignore:
     - ProjectManagement::UI*
+    - ProjectManagement::Test*
