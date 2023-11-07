@@ -5,7 +5,6 @@ require "arkency/command_bus"
 require "ruby_event_store"
 
 require_relative "../lib/project_management"
-require_relative "../../../shared/test/shared_tests"
 
 module ProjectManagement
   class IssueTest < Minitest::Test

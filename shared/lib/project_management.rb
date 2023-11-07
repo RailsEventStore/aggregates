@@ -15,3 +15,5 @@ module ProjectManagement
   IssueProgressStarted = Class.new(RubyEventStore::Event)
   IssueProgressStopped = Class.new(RubyEventStore::Event)
 end
+
+require_relative "project_management/shared_tests"
