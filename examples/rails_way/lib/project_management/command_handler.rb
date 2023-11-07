@@ -5,9 +5,7 @@ module ProjectManagement
     end
 
     def create(cmd)
-      create_issue(cmd.id) do
-        IssueOpened.new(data: { issue_id: cmd.id })
-      end
+      create_issue(cmd.id) { IssueOpened.new(data: { issue_id: cmd.id }) }
     end
 
     def close(cmd)
@@ -47,20 +45,16 @@ module ProjectManagement
 
     private
 
-    def publish(events, id)
-      @event_store.publish(events, stream_name: "Issue$#{id}")
-    end
-
     def create_issue(id)
       Issue.create!(uuid: id)
-      publish(yield, id)
+      @event_store.publish(yield, stream_name: "Issue$#{id}")
     rescue ActiveRecord::RecordNotUnique
       raise Issue::InvalidTransition
     end
 
     def load_issue(id)
       issue = Issue.find_by!(uuid: id)
-      publish(yield(issue), id)
+      @event_store.publish(yield(issue), stream_name: "Issue$#{id}")
       issue.save!
     rescue AASM::InvalidTransition, ActiveRecord::RecordNotFound
       raise Issue::InvalidTransition
