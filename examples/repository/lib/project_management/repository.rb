@@ -12,11 +12,7 @@ module ProjectManagement
     end
 
     def save(id, current_version, changes)
-      store.publish(
-        changes,
-        stream_name: stream_name(id),
-        expected_version: current_version
-      )
+      store.publish(changes, stream_name: stream_name(id), expected_version: current_version)
     end
 
     private

@@ -60,11 +60,7 @@ module ProjectManagement
       issue = Issue.new(id)
       state = IssueProjection.new(event_store).call(issue, stream_name(id))
       event = yield state.issue
-      event_store.publish(
-        event,
-        stream_name: stream_name(id),
-        expected_version: state.version
-      )
+      event_store.publish(event, stream_name: stream_name(id), expected_version: state.version)
     end
   end
 end

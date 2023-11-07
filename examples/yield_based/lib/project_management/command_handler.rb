@@ -5,9 +5,7 @@ module ProjectManagement
     end
 
     def create(cmd)
-      with_issue(cmd.id) do |issue, store|
-        issue.create(cmd.id) { |ev| store.(ev) }
-      end
+      with_issue(cmd.id) { |issue, store| issue.create(cmd.id) { |ev| store.(ev) } }
     end
 
     def resolve(cmd)
@@ -36,9 +34,7 @@ module ProjectManagement
 
     def with_issue(id)
       stream = "Issue$#{id}"
-      repo.with_aggregate(Issue.new, stream) do |issue, store|
-        yield issue, store
-      end
+      repo.with_aggregate(Issue.new, stream) { |issue, store| yield issue, store }
     end
   end
 end

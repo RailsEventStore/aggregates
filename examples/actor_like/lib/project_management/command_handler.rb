@@ -34,9 +34,7 @@ module ProjectManagement
 
     def with_issue(id)
       stream = "Issue$#{id}"
-      repo.with_state(IssueState.new, stream) do |state, store|
-        yield Issue.new(state).link(store)
-      end
+      repo.with_state(IssueState.new, stream) { |state, store| yield Issue.new(state).link(store) }
     end
   end
 end

@@ -14,13 +14,7 @@ class AggregateRepository
         version = index
       end
 
-    store = ->(event) do
-      @event_store.publish(
-        event,
-        stream_name: stream,
-        expected_version: version
-      )
-    end
+    store = ->(event) { @event_store.publish(event, stream_name: stream, expected_version: version) }
     yield aggregate, store
   end
 end

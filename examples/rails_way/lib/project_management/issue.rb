@@ -12,19 +12,19 @@ module ProjectManagement
       state :reopened
 
       event :resolve do
-        transitions from: [:open, :in_progress, :reopened], to: :resolved
+        transitions from: %i[open in_progress reopened], to: :resolved
       end
 
       event :close do
-        transitions from: [:open, :in_progress, :reopened, :resolved], to: :closed
+        transitions from: %i[open in_progress reopened resolved], to: :closed
       end
 
       event :reopen do
-        transitions from: [:closed, :resolved], to: :reopened
+        transitions from: %i[closed resolved], to: :reopened
       end
 
       event :start do
-        transitions from: [:open, :reopened], to: :in_progress
+        transitions from: %i[open reopened], to: :in_progress
       end
 
       event :stop do

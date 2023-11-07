@@ -7,8 +7,6 @@ require "ruby_event_store"
 require_relative "../lib/project_management"
 require_relative "../../../shared/test/shared_tests"
 
-
-
 module ProjectManagement
   class IssueTest < Minitest::Test
     include SharedTests
@@ -29,10 +27,7 @@ module ProjectManagement
     end
 
     def prepare_database
-      ActiveRecord::Base.establish_connection(
-        adapter: "sqlite3",
-        database: ":memory:"
-      )
+      ActiveRecord::Base.establish_connection(adapter: "sqlite3", database: ":memory:")
 
       ActiveRecord::Schema.verbose = false
       ActiveRecord::Schema.define do

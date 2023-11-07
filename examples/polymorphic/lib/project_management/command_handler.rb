@@ -85,11 +85,7 @@ module ProjectManagement
     end
 
     def publish(events, id, version)
-      @event_store.publish(
-        events,
-        stream_name: stream_name(id),
-        expected_version: version
-      )
+      @event_store.publish(events, stream_name: stream_name(id), expected_version: version)
     end
   end
 end

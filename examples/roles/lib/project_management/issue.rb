@@ -8,6 +8,7 @@ module ProjectManagement
     def close = fail
 
     private
+
     def fail = raise InvalidTransition
   end
 

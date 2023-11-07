@@ -2,9 +2,7 @@ module AggregateState
   module ClassMethods
     def on(*event_klasses, &block)
       event_klasses.each do |event_klass|
-        name =
-          event_klass.name ||
-            raise(ArgumentError, "Anonymous class is missing name")
+        name = event_klass.name || raise(ArgumentError, "Anonymous class is missing name")
         handler_name = "on_#{name}"
         define_method(handler_name, &block)
         @on_methods ||= {}
