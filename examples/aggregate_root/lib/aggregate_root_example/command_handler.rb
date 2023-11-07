@@ -1,4 +1,4 @@
-module ProjectManagement
+module AggregateRootExample
   class CommandHandler
     def initialize(event_store)
       @repository = AggregateRoot::Repository.new(event_store)
@@ -16,7 +16,7 @@ module ProjectManagement
     def with_aggregate(id, &block)
       @repository.with_aggregate(Issue.new(id), "Issue$#{id}", &block)
     rescue Issue::InvalidTransition
-      raise Command::Rejected
+      raise PM::Command::Rejected
     end
   end
 end

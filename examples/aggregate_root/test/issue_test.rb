@@ -4,16 +4,16 @@ require "mutant/minitest/coverage"
 require "arkency/command_bus"
 require "ruby_event_store"
 
-require_relative "../lib/project_management"
+require_relative "../lib/aggregate_root_example"
 
-module ProjectManagement
+module AggregateRootExample
   class IssueTest < Minitest::Test
-    include Test.with(
+    cover "AggregateRootExample::Issue*"
+
+    include ProjectManagement::Test.with(
               command_bus: -> { Arkency::CommandBus.new },
               event_store: -> { RubyEventStore::Client.new },
               configuration: Configuration.new
             )
-
-    cover "ProjectManagement::Issue*"
   end
 end
