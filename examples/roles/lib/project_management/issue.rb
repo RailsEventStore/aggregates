@@ -7,9 +7,7 @@ module ProjectManagement
     def reopen = fail
     def close = fail
 
-    private
-
-    def fail = raise InvalidTransition
+    private def fail = raise(InvalidTransition)
   end
 
   module Open
