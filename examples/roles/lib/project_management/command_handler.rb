@@ -80,12 +80,9 @@ module ProjectManagement
               end
             [new_issue, version + 1]
           end
-      publish(yield(issue), id, version)
-    end
 
-    def publish(events, id, version)
       @event_store.publish(
-        events,
+        yield(issue),
         stream_name: stream_name(id),
         expected_version: version
       )
