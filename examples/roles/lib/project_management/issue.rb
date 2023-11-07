@@ -1,102 +1,46 @@
 module ProjectManagement
   class Issue
-    def open
-      extend(Open.clone)
-    end
-    def start
-      raise InvalidTransition
-    end
-    def resolve
-      raise InvalidTransition
-    end
-    def stop
-      raise InvalidTransition
-    end
-    def reopen
-      raise InvalidTransition
-    end
-    def close
-      raise InvalidTransition
-    end
+    def open = extend(Open.clone)
+    def start = raise InvalidTransition
+    def resolve = raise InvalidTransition
+    def stop = raise InvalidTransition
+    def reopen = raise InvalidTransition
+    def close = raise InvalidTransition
   end
+
   module Open
-    def open
-      raise Issue::InvalidTransition
-    end
-    def start
-      extend(InProgress.clone)
-    end
-    def resolve
-      extend(Resolved.clone)
-    end
-    def stop
-      raise Issue::InvalidTransition
-    end
-    def reopen
-      raise Issue::InvalidTransition
-    end
-    def close
-      extend(Closed.clone)
-    end
+    def open = raise Issue::InvalidTransition
+    def start = extend(InProgress.clone)
+    def resolve = extend(Resolved.clone)
+    def stop = raise Issue::InvalidTransition
+    def reopen = raise Issue::InvalidTransition
+    def close = extend(Closed.clone)
   end
+
   module InProgress
-    def open
-      raise Issue::InvalidTransition
-    end
-    def start
-      raise Issue::InvalidTransition
-    end
-    def resolve
-      extend(Resolved.clone)
-    end
-    def stop
-      extend(Open.clone)
-    end
-    def reopen
-      raise Issue::InvalidTransition
-    end
-    def close
-      extend(Closed.clone)
-    end
+    def open = raise Issue::InvalidTransition
+    def start = raise Issue::InvalidTransition
+    def resolve = extend(Resolved.clone)
+    def stop = extend(Open.clone)
+    def reopen = raise Issue::InvalidTransition
+    def close = extend(Closed.clone)
   end
+
   module Resolved
-    def open
-      raise Issue::InvalidTransition
-    end
-    def start
-      raise Issue::InvalidTransition
-    end
-    def resolve
-      raise Issue::InvalidTransition
-    end
-    def stop
-      raise Issue::InvalidTransition
-    end
-    def reopen
-      extend(Open.clone)
-    end
-    def close
-      extend(Closed.clone)
-    end
+    def open = raise Issue::InvalidTransition
+    def start = raise Issue::InvalidTransition
+    def resolve = raise Issue::InvalidTransition
+    def stop = raise Issue::InvalidTransition
+    def reopen = extend(Open.clone)
+    def close = extend(Closed.clone)
   end
+
   module Closed
-    def open
-      raise Issue::InvalidTransition
-    end
-    def start
-      raise Issue::InvalidTransition
-    end
-    def resolve
-      raise Issue::InvalidTransition
-    end
-    def stop
-      raise Issue::InvalidTransition
-    end
-    def reopen
-      extend(Open.clone)
-    end
-    def close
-      raise Issue::InvalidTransition
-    end
+    def open = raise Issue::InvalidTransition
+    def start = raise Issue::InvalidTransition
+    def resolve = raise Issue::InvalidTransition
+    def stop = raise Issue::InvalidTransition
+    def reopen = extend(Open.clone)
+    def close = raise Issue::InvalidTransition
   end
 end
