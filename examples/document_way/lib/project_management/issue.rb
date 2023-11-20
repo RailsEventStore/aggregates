@@ -1,6 +1,6 @@
 module ProjectManagement
   class Issue
-    State = Data.define(:id, :status)
+    State = Struct.new(:id, :status)
 
     class Repository
       class Record < ActiveRecord::Base
@@ -14,7 +14,7 @@ module ProjectManagement
 
       def load
         record = Record.find_or_create_by(uuid: @id)
-        State.new(id: record.uuid, status: record.status)
+        State.new(record.uuid, record.status)
       end
     end
 
@@ -28,37 +28,37 @@ module ProjectManagement
 
     def open
       fail if @state.status
-      @state = @state.with(status: "open")
+      @state = "open"
       IssueOpened.new(data: { issue_id: @state.id })
     end
 
     def resolve
       fail unless %w[open in_progress reopened].include? @state.status
-      @state = @state.with(status: "resolved")
+      @state = "resolved"
       IssueResolved.new(data: { issue_id: @state.id })
     end
 
     def close
       fail unless %w[open in_progress resolved reopened].include? @state.status
-      @state = @state.with(status: "closed")
+      @state = "closed"
       IssueClosed.new(data: { issue_id: @state.id })
     end
 
     def reopen
       fail unless %w[resolved closed].include? @state.status
-      @state = @state.with(status: "reopened")
+      @state = "reopened"
       IssueReopened.new(data: { issue_id: @state.id })
     end
 
     def start
       fail unless %w[open reopened].include? @state.status
-      @state = @state.with(status: "in_progress")
+      @state = "in_progress"
       IssueProgressStarted.new(data: { issue_id: @state.id })
     end
 
     def stop
       fail unless %w[in_progress].include? @state.status
-      @state = @state.with(status: "open")
+      @state = "open"
       IssueProgressStopped.new(data: { issue_id: @state.id })
     end
 
