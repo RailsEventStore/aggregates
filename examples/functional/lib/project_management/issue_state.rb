@@ -26,17 +26,17 @@ module ProjectManagement
     def apply(event)
       case event
       when IssueOpened
-        self.status = :open
+        IssueState.new(id, :open)
       when IssueResolved
-        self.status = :resolved
+        IssueState.new(id, :resolved)
       when IssueClosed
-        self.status = :closed
+        IssueState.new(id, :closed)
       when IssueReopened
-        self.status = :reopened
+        IssueState.new(id, :reopened)
       when IssueProgressStarted
-        self.status = :in_progress
+        IssueState.new(id, :in_progress)
       when IssueProgressStopped
-        self.status = :open
+        IssueState.new(id, :open)
       end
     end
   end

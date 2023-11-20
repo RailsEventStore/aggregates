@@ -1,8 +1,6 @@
 module ProjectManagement
   class CommandHandler
-    def initialize(event_store)
-      @event_store = event_store
-    end
+    def initialize(event_store) = @event_store = event_store
 
     def create(cmd) = with_state(cmd.id) { |state| Issue.create(state) }
     def resolve(cmd) = with_state(cmd.id) { |state| Issue.resolve(state) }
@@ -13,20 +11,21 @@ module ProjectManagement
 
     private
 
-    def with_state(id)
-      stream_name = "Issue$#{id}"
-      version = -1
-      state = IssueState.new(id)
+    def stream_name(id) = "Issue$#{id}"
 
-      @event_store
-        .read
-        .stream(stream_name)
-        .each do |event|
-          state.apply(event)
-          version += 1
-        end
-      events = yield state
-      @event_store.publish(events, stream_name: stream_name, expected_version: version)
+    def with_state(id)
+      state, version =
+        @event_store
+          .read
+          .stream(stream_name(id))
+          .reduce([IssueState.new(id), -1]) do |(state, version), event|
+            [state.apply(event), version + 1]
+          end
+      @event_store.publish(
+        events = yield(state),
+        stream_name: stream_name(id),
+        expected_version: version
+      )
     rescue Issue::InvalidTransition
       raise Error
     end

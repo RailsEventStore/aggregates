@@ -8,12 +8,17 @@ module ProjectManagement
     end
 
     def self.resolve(state)
-      raise InvalidTransition unless state.open? || state.reopened? || state.in_progress?
+      unless state.open? || state.reopened? || state.in_progress?
+        raise InvalidTransition
+      end
       IssueResolved.new(data: { issue_id: state.id })
     end
 
     def self.close(state)
-      raise InvalidTransition unless state.open? || state.in_progress? || state.reopened? || state.resolved?
+      unless state.open? || state.in_progress? || state.reopened? ||
+               state.resolved?
+        raise InvalidTransition
+      end
       IssueClosed.new(data: { issue_id: state.id })
     end
 
