@@ -18,9 +18,9 @@ module ProjectManagement
         @event_store
           .read
           .stream(stream_name(id))
-          .reduce([IssueState.new(id), -1]) do |(state, version), event|
+          .reduce([IssueState.initial(id), -1]) do |(state, version), event|
             [state.apply(event), version + 1]
-        end
+          end
 
       case result = yield(state)
       when Issue::InvalidTransition
