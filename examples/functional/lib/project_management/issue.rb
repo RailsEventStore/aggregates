@@ -2,7 +2,7 @@ module ProjectManagement
   module Issue
     InvalidTransition = Class.new(StandardError)
 
-    def self.create(state)
+    def self.open(state)
       if state.status
         InvalidTransition.new
       else

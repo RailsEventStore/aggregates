@@ -2,7 +2,7 @@ module ProjectManagement
   class CommandHandler
     def initialize(event_store) = @event_store = event_store
 
-    def create(cmd) = with_state(cmd.id) { |state| Issue.create(state) }
+    def create(cmd) = with_state(cmd.id) { |state| Issue.open(state) }
     def resolve(cmd) = with_state(cmd.id) { |state| Issue.resolve(state) }
     def close(cmd) = with_state(cmd.id) { |state| Issue.close(state) }
     def reopen(cmd) = with_state(cmd.id) { |state| Issue.reopen(state) }
