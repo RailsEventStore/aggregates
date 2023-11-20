@@ -1,83 +1,17 @@
 module ProjectManagement
   class Issue
-    InvalidTransition = Class.new(StandardError)
+    def create = @status = :open
+    def resolve = @status = :resolved
+    def close = @status = :closed
+    def reopen = @status = :reopened
+    def start = @status = :in_progress
+    def stop = @status = :open
 
-    attr_reader :id
-
-    def initialize(id)
-      @id = id
-    end
-
-    def create
-      self.status = :open
-    end
-
-    def resolve
-      self.status = :resolved
-    end
-
-    def close
-      self.status = :closed
-    end
-
-    def reopen
-      self.status = :reopened
-    end
-
-    def start
-      self.status = :in_progress
-    end
-
-    def stop
-      self.status = :open
-    end
-
-    def can_create?
-      status.nil?
-    end
-
-    def can_reopen?
-      closed? || resolved?
-    end
-
-    def can_start?
-      open? || reopened?
-    end
-
-    def can_stop?
-      in_progress?
-    end
-
-    def can_close?
-      open? || in_progress? || reopened? || resolved?
-    end
-
-    def can_resolve?
-      open? || reopened? || in_progress?
-    end
-
-    private
-
-    attr_accessor :status
-
-    def open?
-      status == :open
-    end
-
-    def closed?
-      status == :closed
-    end
-
-    def in_progress?
-      status == :in_progress
-    end
-
-    def reopened?
-      status == :reopened
-    end
-
-    def resolved?
-      status == :resolved
-    end
+    def can_create? = @status.nil?
+    def can_reopen? = %i[closed resolved].include? @status
+    def can_start? = %i[open reopened].include? @status
+    def can_stop? = %i[in_progress].include? @status
+    def can_close? = %i[open in_progress reopened resolved].include? @status
+    def can_resolve? = %i[open reopened in_progress].include? @status
   end
 end
