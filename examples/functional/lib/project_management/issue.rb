@@ -2,82 +2,34 @@ module ProjectManagement
   module Issue
     InvalidTransition = Class.new(StandardError)
 
-    class Create
-      def call(state)
-        raise InvalidTransition unless can_create?(state)
-        IssueOpened.new(data: { issue_id: state.id })
-      end
-
-      private
-
-      def can_create?(state)
-        state.initial?
-      end
+    def self.create(state)
+      raise InvalidTransition unless state.initial?
+      IssueOpened.new(data: { issue_id: state.id })
     end
 
-    class Resolve
-      def call(state)
-        raise InvalidTransition unless can_resolve?(state)
-        IssueResolved.new(data: { issue_id: state.id })
-      end
-
-      private
-
-      def can_resolve?(state)
-        state.open? || state.reopened? || state.in_progress?
-      end
+    def self.resolve(state)
+      raise InvalidTransition unless state.open? || state.reopened? || state.in_progress?
+      IssueResolved.new(data: { issue_id: state.id })
     end
 
-    class Close
-      def call(state)
-        raise InvalidTransition unless can_close?(state)
-        IssueClosed.new(data: { issue_id: state.id })
-      end
-
-      private
-
-      def can_close?(state)
-        state.open? || state.in_progress? || state.reopened? || state.resolved?
-      end
+    def self.close(state)
+      raise InvalidTransition unless state.open? || state.in_progress? || state.reopened? || state.resolved?
+      IssueClosed.new(data: { issue_id: state.id })
     end
 
-    class Reopen
-      def call(state)
-        raise InvalidTransition unless can_reopen?(state)
-        IssueReopened.new(data: { issue_id: state.id })
-      end
-
-      private
-
-      def can_reopen?(state)
-        state.closed? || state.resolved?
-      end
+    def self.reopen(state)
+      raise InvalidTransition unless state.closed? || state.resolved?
+      IssueReopened.new(data: { issue_id: state.id })
     end
 
-    class Stop
-      def call(state)
-        raise InvalidTransition unless can_stop?(state)
-        IssueProgressStopped.new(data: { issue_id: state.id })
-      end
-
-      private
-
-      def can_stop?(state)
-        state.in_progress?
-      end
+    def self.stop(state)
+      raise InvalidTransition unless state.in_progress?
+      IssueProgressStopped.new(data: { issue_id: state.id })
     end
 
-    class Start
-      def call(state)
-        raise InvalidTransition unless can_start?(state)
-        IssueProgressStarted.new(data: { issue_id: state.id })
-      end
-
-      private
-
-      def can_start?(state)
-        state.open? || state.reopened?
-      end
+    def self.start(state)
+      raise InvalidTransition unless state.open? || state.reopened?
+      IssueProgressStarted.new(data: { issue_id: state.id })
     end
   end
 end
