@@ -1,17 +1,20 @@
 module ProjectManagement
-  class Issue
-    def create = @status = :open
-    def resolve = @status = :resolved
-    def close = @status = :closed
-    def reopen = @status = :reopened
-    def start = @status = :in_progress
-    def stop = @status = :open
+  Issue =
+    Data.define(:status) do
+      def self.initial = new(status: nil)
 
-    def can_create? = @status.nil?
-    def can_reopen? = %i[closed resolved].include? @status
-    def can_start? = %i[open reopened].include? @status
-    def can_stop? = %i[in_progress].include? @status
-    def can_close? = %i[open in_progress reopened resolved].include? @status
-    def can_resolve? = %i[open reopened in_progress].include? @status
-  end
+      def open = with(status: :open)
+      def resolve = with(status: :resolved)
+      def close = with(status: :closed)
+      def reopen = with(status: :reopened)
+      def start = with(status: :in_progress)
+      def stop = with(status: :open)
+
+      def can_create? = status.nil?
+      def can_reopen? = %i[closed resolved].include? status
+      def can_start? = %i[open reopened].include? status
+      def can_stop? = %i[in_progress].include? status
+      def can_close? = %i[open in_progress reopened resolved].include? status
+      def can_resolve? = %i[open reopened in_progress].include? status
+    end
 end
