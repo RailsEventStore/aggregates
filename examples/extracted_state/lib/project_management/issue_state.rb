@@ -1,27 +1,11 @@
 module ProjectManagement
   class IssueState < Struct.new(:id, :status)
-    def initial?
-      status.nil?
-    end
-    def open?
-      status == :open
-    end
-
-    def closed?
-      status == :closed
-    end
-
-    def in_progress?
-      status == :in_progress
-    end
-
-    def reopened?
-      status == :reopened
-    end
-
-    def resolved?
-      status == :resolved
-    end
+    def initial? = status.nil?
+    def open? = status == :open
+    def closed? = status == :closed
+    def in_progress? = status == :in_progress
+    def reopened? = status == :reopened
+    def resolved? = status == :resolved
 
     def apply(event)
       case event
