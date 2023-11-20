@@ -45,17 +45,25 @@ module ProjectManagement
 
     private
 
+    def stream_name(id) = "Issue$#{id}"
+
+    def in_transaction(&) = ActiveRecord::Base.transaction(&)
+
     def create_issue(id)
-      Issue.create!(uuid: id)
-      @event_store.publish(yield, stream_name: "Issue$#{id}")
+      in_transaction do
+        Issue.create!(uuid: id)
+        @event_store.publish(yield, stream_name: stream_name(id))
+      end
     rescue ActiveRecord::RecordNotUnique
       raise Error
     end
 
     def load_issue(id)
-      issue = Issue.find_by!(uuid: id)
-      @event_store.publish(yield(issue), stream_name: "Issue$#{id}")
-      issue.save!
+      in_transaction do
+        issue = Issue.find_by!(uuid: id)
+        @event_store.publish(yield(issue), stream_name: stream_name(id))
+        issue.save!
+      end
     rescue AASM::InvalidTransition, ActiveRecord::RecordNotFound
       raise Error
     end
