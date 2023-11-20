@@ -9,8 +9,6 @@ module ProjectManagement
         issue.open
         IssueOpened.new(data: { issue_id: cmd.id })
       end
-    rescue NoMethodError
-      raise_invalid
     end
 
     def close(cmd)
@@ -18,8 +16,6 @@ module ProjectManagement
         issue.close
         IssueClosed.new(data: { issue_id: cmd.id })
       end
-    rescue NoMethodError
-      raise_invalid
     end
 
     def start(cmd)
@@ -27,8 +23,6 @@ module ProjectManagement
         issue.start
         IssueProgressStarted.new(data: { issue_id: cmd.id })
       end
-    rescue NoMethodError
-      raise_invalid
     end
 
     def stop(cmd)
@@ -36,8 +30,6 @@ module ProjectManagement
         issue.stop
         IssueProgressStopped.new(data: { issue_id: cmd.id })
       end
-    rescue NoMethodError
-      raise_invalid
     end
 
     def reopen(cmd)
@@ -45,8 +37,6 @@ module ProjectManagement
         issue.reopen
         IssueReopened.new(data: { issue_id: cmd.id })
       end
-    rescue NoMethodError
-      raise_invalid
     end
 
     def resolve(cmd)
@@ -54,49 +44,43 @@ module ProjectManagement
         issue.resolve
         IssueResolved.new(data: { issue_id: cmd.id })
       end
-    rescue NoMethodError
-      raise_invalid
     end
 
     private
 
-    def raise_invalid
-      raise Error
-    end
-
-    def stream_name(id)
-      "Issue$#{id}"
-    end
+    def stream_name(id) = "Issue$#{id}"
 
     def load_issue(id)
-      version = -1
-      issue = Issue.new
-      @event_store
-        .read
-        .stream(stream_name(id))
-        .each do |event|
-          case event
-          when IssueOpened
-            issue = issue.open
-          when IssueProgressStarted
-            issue = issue.start
-          when IssueProgressStopped
-            issue = issue.stop
-          when IssueResolved
-            issue = issue.resolve
-          when IssueReopened
-            issue = issue.reopen
-          when IssueClosed
-            issue = issue.close
+      issue, version =
+        @event_store
+          .read
+          .stream(stream_name(id))
+          .reduce([Issue.new, -1]) do |(issue, version), event|
+            new_issue =
+              case event
+              when IssueOpened
+                issue.open
+              when IssueProgressStarted
+                issue.start
+              when IssueProgressStopped
+                issue.stop
+              when IssueResolved
+                issue.resolve
+              when IssueReopened
+                issue.reopen
+              when IssueClosed
+                issue.close
+              end
+            [new_issue, version + 1]
           end
-          version += 1
-        end
-      events = yield issue
-      publish(events, id, version)
-    end
 
-    def publish(events, id, version)
-      @event_store.publish(events, stream_name: stream_name(id), expected_version: version)
+      @event_store.publish(
+        yield(issue),
+        stream_name: stream_name(id),
+        expected_version: version
+      )
+    rescue NoMethodError
+      raise Error
     end
   end
 end

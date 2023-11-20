@@ -1,42 +1,26 @@
 module ProjectManagement
   class Issue
-    def open
-      Open.new
-    end
+    def open = Open.new
   end
+
   class Open
-    def start
-      InProgress.new
-    end
-    def resolve
-      Resolved.new
-    end
-    def close
-      Closed.new
-    end
+    def start = InProgress.new
+    def resolve = Resolved.new
+    def close = Closed.new
   end
+
   class InProgress
-    def stop
-      Open.new
-    end
-    def close
-      Closed.new
-    end
-    def resolve
-      Resolved.new
-    end
+    def stop = Open.new
+    def close = Closed.new
+    def resolve = Resolved.new
   end
+
   class Resolved
-    def close
-      Closed.new
-    end
-    def reopen
-      Open.new
-    end
+    def close = Closed.new
+    def reopen = Open.new
   end
+
   class Closed
-    def reopen
-      Open.new
-    end
+    def reopen = Open.new
   end
 end
