@@ -20,14 +20,18 @@ module ProjectManagement
           .stream(stream_name(id))
           .reduce([IssueState.new(id), -1]) do |(state, version), event|
             [state.apply(event), version + 1]
-          end
-      @event_store.publish(
-        events = yield(state),
-        stream_name: stream_name(id),
-        expected_version: version
-      )
-    rescue Issue::InvalidTransition
-      raise Error
+        end
+
+      case result = yield(state)
+      when Issue::InvalidTransition
+        raise Error
+      else
+        @event_store.publish(
+          result,
+          stream_name: stream_name(id),
+          expected_version: version
+        )
+      end
     end
   end
 end
