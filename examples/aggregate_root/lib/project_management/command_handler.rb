@@ -1,4 +1,4 @@
-module AggregateRootExample
+module ProjectManagement
   class CommandHandler
     Rejected = Class.new(PM::Error)
 

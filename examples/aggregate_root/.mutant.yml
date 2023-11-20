@@ -3,7 +3,9 @@ integration:
 includes:
   - lib
 requires:
-  - aggregate_root_example
+  - project_management
 matcher:
   subjects:
-    - AggregateRootExample*
+    - ProjectManagement*
+  ignore:
+    - ProjectManagement::Test*
