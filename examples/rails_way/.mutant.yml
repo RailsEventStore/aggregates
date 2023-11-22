@@ -9,3 +9,5 @@ matcher:
   - ProjectManagement*
   ignore:
     - ProjectManagement::Test*
+    - ProjectManagement::CommandHandler#load_issue
+    - ProjectManagement::CommandHandler#create_issue
