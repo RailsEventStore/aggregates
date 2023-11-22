@@ -17,16 +17,13 @@ module ProjectManagement
           version = idx
         end
 
-      case result = decider.decide(cmd)
-      when StandardError
-        raise Error
-      else
-        @event_store.publish(
-          result,
-          stream_name: stream_name(cmd.id),
-          expected_version: version
-        )
-      end
+      @event_store.publish(
+        decider.decide(cmd),
+        stream_name: stream_name(cmd.id),
+        expected_version: version
+      )
+    rescue Issue::InvalidTransition
+      raise Error
     end
 
     private
