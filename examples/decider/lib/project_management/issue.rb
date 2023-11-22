@@ -1,7 +1,6 @@
 module ProjectManagement
   class Issue
     InvalidTransition = Class.new(StandardError)
-
     State = Data.define(:id, :status)
     private_constant :State
 
@@ -47,36 +46,52 @@ module ProjectManagement
     private
 
     def open
-      fail if @state.status
-      IssueOpened.new(data: { issue_id: @state.id })
+      if @state.status
+        InvalidTransition.new
+      else
+        IssueOpened.new(data: { issue_id: @state.id })
+      end
     end
 
     def resolve
-      fail unless %i[open in_progress reopened].include? @state.status
-      IssueResolved.new(data: { issue_id: @state.id })
+      if %i[open in_progress reopened].include? @state.status
+        IssueResolved.new(data: { issue_id: @state.id })
+      else
+        InvalidTransition.new
+      end
     end
 
     def close
-      fail unless %i[open in_progress resolved reopened].include? @state.status
-      IssueClosed.new(data: { issue_id: @state.id })
+      if %i[open in_progress resolved reopened].include? @state.status
+        IssueClosed.new(data: { issue_id: @state.id })
+      else
+        InvalidTransition.new
+      end
     end
 
     def reopen
-      fail unless %i[resolved closed].include? @state.status
-      IssueReopened.new(data: { issue_id: @state.id })
-    end
-
-    def start
-      fail unless %i[open reopened].include? @state.status
-      IssueProgressStarted.new(data: { issue_id: @state.id })
+      if %i[resolved closed].include? @state.status
+        IssueReopened.new(data: { issue_id: @state.id })
+      else
+        InvalidTransition.new
+      end
     end
 
     def stop
-      fail unless %i[in_progress].include? @state.status
-      IssueProgressStopped.new(data: { issue_id: @state.id })
+      if %i[in_progress].include? @state.status
+        IssueProgressStopped.new(data: { issue_id: @state.id })
+      else
+        InvalidTransition.new
+      end
     end
 
-    def fail = raise InvalidTransition
+    def start
+      if %i[open reopened].include? @state.status
+        IssueProgressStarted.new(data: { issue_id: @state.id })
+      else
+        InvalidTransition.new
+      end
+    end
 
     def initial_state(id) = State.new(id: id, status: nil)
   end
