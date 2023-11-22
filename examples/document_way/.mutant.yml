@@ -11,3 +11,6 @@ matcher:
     - ProjectManagement::Issue#apply_on_state
     - ProjectManagement::Issue#apply
     - ProjectManagement::Test*
+    - ProjectManagement::Issue::Repository*
+    - ProjectManagement::CommandHandler#with_aggregate
+
