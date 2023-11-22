@@ -1,6 +1,7 @@
 EXAMPLES = actor_like \
 		   aggregate_root \
 		   document_way \
+		   decider \
            duck_typing \
            extracted_state \
            functional \

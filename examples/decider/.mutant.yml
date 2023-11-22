@@ -1,0 +1,11 @@
+integration:
+  name: minitest
+includes:
+  - lib
+requires:
+  - project_management
+matcher:
+  subjects:
+    - ProjectManagement*
+  ignore:
+    - ProjectManagement::Test*
