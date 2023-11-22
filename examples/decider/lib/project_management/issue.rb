@@ -3,32 +3,30 @@ module ProjectManagement
     State = Data.define(:id, :status)
 
     def self.decide(command, state)
-      events =
-        case command
-        when CreateIssue
-          [IssueOpened.new(data: { issue_id: state.id })] unless state.status
-        when ResolveIssue
-          if %i[open in_progress reopened].include? state.status
-            [IssueResolved.new(data: { issue_id: state.id })]
-          end
-        when CloseIssue
-          if %i[open in_progress resolved reopened].include? state.status
-            [IssueClosed.new(data: { issue_id: state.id })]
-          end
-        when ReopenIssue
-          if %i[resolved closed].include? state.status
-            [IssueReopened.new(data: { issue_id: state.id })]
-          end
-        when StartIssueProgress
-          if %i[open reopened].include? state.status
-            [IssueProgressStarted.new(data: { issue_id: state.id })]
-          end
-        when StopIssueProgress
-          if %i[in_progress].include? state.status
-            [IssueProgressStopped.new(data: { issue_id: state.id })]
-          end
+      case command
+      when CreateIssue
+        IssueOpened.new(data: { issue_id: state.id }) unless state.status
+      when ResolveIssue
+        if %i[open in_progress reopened].include? state.status
+          IssueResolved.new(data: { issue_id: state.id })
         end
-      Array(events)
+      when CloseIssue
+        if %i[open in_progress resolved reopened].include? state.status
+          IssueClosed.new(data: { issue_id: state.id })
+        end
+      when ReopenIssue
+        if %i[resolved closed].include? state.status
+          IssueReopened.new(data: { issue_id: state.id })
+        end
+      when StartIssueProgress
+        if %i[open reopened].include? state.status
+          IssueProgressStarted.new(data: { issue_id: state.id })
+        end
+      when StopIssueProgress
+        if %i[in_progress].include? state.status
+          IssueProgressStopped.new(data: { issue_id: state.id })
+        end
+      end
     end
 
     def self.evolve(state, event)

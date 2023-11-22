@@ -25,7 +25,7 @@ module ProjectManagement
           end
 
       events = Issue.decide(cmd, state)
-      raise Error if events.empty?
+      raise Error unless events
 
       @event_store.publish(
         events,
