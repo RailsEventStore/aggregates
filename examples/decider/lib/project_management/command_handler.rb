@@ -1,6 +1,10 @@
 module ProjectManagement
   class CommandHandler
-    def initialize(event_store) = @event_store = event_store
+    def initialize(event_store)
+      @event_store = event_store
+      @decider = Issue
+    end
+
 
     def handle(cmd)
       state, version =
@@ -8,12 +12,12 @@ module ProjectManagement
           .read
           .stream(stream_name(cmd.id))
           .reduce(
-            [Issue.initial_state(cmd.id), -1]
+            [@decider.initial_state(cmd.id), -1]
           ) do |(state, version), event|
-            [Issue.evolve(state, event), version + 1]
+            [@decider.evolve(state, event), version + 1]
           end
 
-      case result = Issue.decide(cmd, state)
+      case result = @decider.decide(cmd, state)
       when StandardError
         raise Error
       else
