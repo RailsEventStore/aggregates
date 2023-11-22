@@ -5,7 +5,6 @@ module ProjectManagement
       @decider = Issue
     end
 
-
     def handle(cmd)
       state, version =
         @event_store
