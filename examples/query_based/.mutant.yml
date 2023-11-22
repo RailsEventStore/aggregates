@@ -9,3 +9,4 @@ matcher:
     - ProjectManagement*
   ignore:
     - ProjectManagement::Test*
+    - ProjectManagement::IssueProjection#call
