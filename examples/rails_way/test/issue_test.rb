@@ -9,7 +9,7 @@ module ProjectManagement
   class IssueTest < Minitest::Test
     include Test.with(
               command_handler: ->(event_store) do
-                ProjectManagement::CommandHandler.new(event_store)
+                CommandHandler.new(event_store)
               end,
               event_store: -> { RubyEventStore::Client.new }
             )
