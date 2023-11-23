@@ -41,7 +41,7 @@ module ProjectManagement
       issue = Issue.new(repository.load)
 
       with_transaction do
-        @event_store.publish(yield(issue), stream_name: stream_name(id))
+        @event_store.append(yield(issue), stream_name: stream_name(id))
         repository.store(issue.state)
       end
     end

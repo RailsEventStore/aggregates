@@ -7,7 +7,7 @@ class AggregateRepository
     @event_store.read.stream(stream).each { |event| state.call(event) }
 
     store = ->(event) do
-      @event_store.publish(event, stream_name: stream)
+      @event_store.append(event, stream_name: stream)
       true
     end
     yield state, store

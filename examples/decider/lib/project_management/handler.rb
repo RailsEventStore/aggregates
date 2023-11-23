@@ -18,7 +18,7 @@ module ProjectManagement
       when StandardError
         raise Error
       else
-        @event_store.publish(result, stream_name: stream_name(cmd.id))
+        @event_store.append(result, stream_name: stream_name(cmd.id))
       end
     end
 

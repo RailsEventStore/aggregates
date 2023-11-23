@@ -41,7 +41,7 @@ module ProjectManagement
 
       yield issue = Issue.new(state)
 
-      @event_store.publish(issue.changes, stream_name: stream_name(id))
+      @event_store.append(issue.changes, stream_name: stream_name(id))
     end
   end
 end

@@ -71,7 +71,7 @@ module ProjectManagement
       issue =
         IssueProjection.new(@event_store).call(Issue.initial, stream_name(id))
 
-      @event_store.publish(yield(issue), stream_name: stream_name(id))
+      @event_store.append(yield(issue), stream_name: stream_name(id))
     end
   end
 end

@@ -93,7 +93,7 @@ module ProjectManagement
           end
         end
       events = yield issue
-      @event_store.publish(events, stream_name: stream_name(id))
+      @event_store.append(events, stream_name: stream_name(id))
     end
   end
 end

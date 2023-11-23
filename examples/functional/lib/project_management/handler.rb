@@ -41,7 +41,7 @@ module ProjectManagement
       when Issue::InvalidTransition
         raise Error
       else
-        @event_store.publish(result, stream_name: stream_name(id))
+        @event_store.append(result, stream_name: stream_name(id))
       end
     end
   end

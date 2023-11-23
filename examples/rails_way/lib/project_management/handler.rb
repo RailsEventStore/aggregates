@@ -69,7 +69,7 @@ module ProjectManagement
     def create_issue(id)
       in_transaction do
         Issue.create!(uuid: id)
-        @event_store.publish(yield, stream_name: stream_name(id))
+        @event_store.append(yield, stream_name: stream_name(id))
       end
     rescue ActiveRecord::RecordNotUnique
       raise Error
@@ -78,7 +78,7 @@ module ProjectManagement
     def load_issue(id)
       in_transaction do
         issue = Issue.find_by!(uuid: id)
-        @event_store.publish(yield(issue), stream_name: stream_name(id))
+        @event_store.append(yield(issue), stream_name: stream_name(id))
         issue.save!
       end
     rescue AASM::InvalidTransition, ActiveRecord::RecordNotFound
