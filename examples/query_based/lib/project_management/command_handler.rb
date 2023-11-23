@@ -68,14 +68,10 @@ module ProjectManagement
     def stream_name(id) = "Issue$#{id}"
 
     def with_aggregate(id)
-      issue, version =
+      issue =
         IssueProjection.new(@event_store).call(Issue.initial, stream_name(id))
 
-      @event_store.publish(
-        yield(issue),
-        stream_name: stream_name(id),
-        expected_version: version
-      )
+      @event_store.publish(yield(issue), stream_name: stream_name(id))
     end
   end
 end

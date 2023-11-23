@@ -260,35 +260,15 @@ module ProjectManagement
           )
         end
 
-        def test_stream_isolation
-          create_issue
-          create_additional_issue
-          resolve_issue
-
-          assert_events(issue_opened, issue_resolved)
-        end
-
-        def test_passed_expected_version
-          assert_version(-1) { create_issue }
-          assert_version(0) { start_issue_progress }
-          assert_version(1) { close_issue }
-          assert_version(2) { reopen_issue }
-        end
-
         private
 
         def issue_id = "c97a6121-f933-4609-9e96-e77dc2f67a16"
-
-        def additional_issue_id = "96c785c9-5398-4010-b0ad-36bbd1d3f7a1"
 
         def issue_data = { issue_id: issue_id }
 
         def stream_name = "Issue$#{issue_id}"
 
         def create_issue = command_handler.call(CreateIssue.new(issue_id))
-
-        def create_additional_issue =
-          command_handler.call(CreateIssue.new(additional_issue_id))
 
         def reopen_issue = command_handler.call(ReopenIssue.new(issue_id))
 
@@ -319,24 +299,6 @@ module ProjectManagement
         def assert_events(*events, comparable: ->(e) { [e.event_type, e.data] })
           assert_equal events.map(&comparable),
                        event_store.read.stream(stream_name).map(&comparable)
-        end
-
-        def assert_version(version_number)
-          captured_events = []
-          captured_version = nil
-          captured_stream = nil
-          fake_publish = ->(events, stream_name:, expected_version:) do
-            captured_events = events
-            captured_stream = stream_name
-            captured_version = expected_version
-          end
-          event_store.stub(:publish, fake_publish) { yield }
-          event_store.publish(
-            captured_events,
-            stream_name: captured_stream,
-            expected_version: captured_version
-          )
-          assert_equal version_number, captured_version
         end
       end
     end

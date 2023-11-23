@@ -72,7 +72,6 @@ module ProjectManagement
     end
 
     def load_issue(id)
-      version = -1
       issue = Issue.new
       @event_store
         .read
@@ -92,14 +91,9 @@ module ProjectManagement
           when IssueClosed
             issue = issue.close
           end
-          version += 1
         end
       events = yield issue
-      @event_store.publish(
-        events,
-        stream_name: stream_name(id),
-        expected_version: version
-      )
+      @event_store.publish(events, stream_name: stream_name(id))
     end
   end
 end

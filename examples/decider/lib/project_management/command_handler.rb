@@ -6,25 +6,19 @@ module ProjectManagement
     end
 
     def call(cmd)
-      state, version =
+      state =
         @event_store
           .read
           .stream(stream_name(cmd.id))
-          .reduce(
-            [@decider.initial_state(cmd.id), -1]
-          ) do |(state, version), event|
-            [@decider.evolve(state, event), version + 1]
+          .reduce(@decider.initial_state(cmd.id)) do |state, event|
+            @decider.evolve(state, event)
           end
 
       case result = @decider.decide(cmd, state)
       when StandardError
         raise Error
       else
-        @event_store.publish(
-          result,
-          stream_name: stream_name(cmd.id),
-          expected_version: version
-        )
+        @event_store.publish(result, stream_name: stream_name(cmd.id))
       end
     end
 

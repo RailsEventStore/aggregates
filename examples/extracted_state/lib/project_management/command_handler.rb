@@ -33,21 +33,15 @@ module ProjectManagement
     def stream_name(id) = "Issue$#{id}"
 
     def with_aggregate(id)
-      state, version =
+      state =
         @event_store
           .read
           .stream(stream_name(id))
-          .reduce([IssueState.initial(id), -1]) do |(state, version), event|
-            [state.apply(event), version + 1]
-          end
+          .reduce(IssueState.initial(id)) { |state, event| state.apply(event) }
 
       yield issue = Issue.new(state)
 
-      @event_store.publish(
-        issue.changes,
-        stream_name: stream_name(id),
-        expected_version: version
-      )
+      @event_store.publish(issue.changes, stream_name: stream_name(id))
     end
   end
 end

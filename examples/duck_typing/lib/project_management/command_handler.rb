@@ -70,34 +70,28 @@ module ProjectManagement
     def stream_name(id) = "Issue$#{id}"
 
     def load_issue(id)
-      issue, version =
+      issue =
         @event_store
           .read
           .stream(stream_name(id))
-          .reduce([Issue.new, -1]) do |(issue, version), event|
-            new_issue =
-              case event
-              when IssueOpened
-                issue.open
-              when IssueProgressStarted
-                issue.start
-              when IssueProgressStopped
-                issue.stop
-              when IssueResolved
-                issue.resolve
-              when IssueReopened
-                issue.reopen
-              when IssueClosed
-                issue.close
-              end
-            [new_issue, version + 1]
+          .reduce(Issue.new) do |issue, event|
+            case event
+            when IssueOpened
+              issue.open
+            when IssueProgressStarted
+              issue.start
+            when IssueProgressStopped
+              issue.stop
+            when IssueResolved
+              issue.resolve
+            when IssueReopened
+              issue.reopen
+            when IssueClosed
+              issue.close
+            end
           end
 
-      @event_store.publish(
-        yield(issue),
-        stream_name: stream_name(id),
-        expected_version: version
-      )
+      @event_store.publish(yield(issue), stream_name: stream_name(id))
     end
   end
 end

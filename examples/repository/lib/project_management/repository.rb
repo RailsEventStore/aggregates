@@ -5,18 +5,11 @@ module ProjectManagement
     end
 
     def load(id)
-      events = store.read.stream(stream_name(id)).to_a
-      version = events.size - 1
-
-      [events, version]
+      store.read.stream(stream_name(id)).to_a
     end
 
-    def save(id, current_version, changes)
-      store.publish(
-        changes,
-        stream_name: stream_name(id),
-        expected_version: current_version
-      )
+    def save(id, changes)
+      store.publish(changes, stream_name: stream_name(id))
     end
 
     private

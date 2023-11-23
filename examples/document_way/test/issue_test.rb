@@ -16,10 +16,6 @@ module ProjectManagement
 
     cover "ProjectManagement::Issue*"
 
-    def test_passed_expected_version
-      skip "this test sucks"
-    end
-
     def setup
       ActiveRecord::Base.establish_connection(
         adapter: "sqlite3",

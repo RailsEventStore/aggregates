@@ -31,23 +31,17 @@ module ProjectManagement
     def stream_name(id) = "Issue$#{id}"
 
     def with_state(id)
-      state, version =
+      state =
         @event_store
           .read
           .stream(stream_name(id))
-          .reduce([IssueState.initial(id), -1]) do |(state, version), event|
-            [state.apply(event), version + 1]
-          end
+          .reduce(IssueState.initial(id)) { |state, event| state.apply(event) }
 
       case result = yield(state)
       when Issue::InvalidTransition
         raise Error
       else
-        @event_store.publish(
-          result,
-          stream_name: stream_name(id),
-          expected_version: version
-        )
+        @event_store.publish(result, stream_name: stream_name(id))
       end
     end
   end
