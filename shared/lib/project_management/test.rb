@@ -20,7 +20,7 @@ module ProjectManagement
         def test_open_from_initial
           create_issue
 
-          assert_events issue_opened
+          assert_events(issue_opened)
         end
 
         def test_open_from_in_progress
@@ -28,9 +28,11 @@ module ProjectManagement
           start_issue_progress
           stop_issue_progress
 
-          assert_events issue_opened,
-                        issue_progress_started,
-                        issue_progress_stopped
+          assert_events(
+            issue_opened,
+            issue_progress_started,
+            issue_progress_stopped
+          )
         end
 
         def test_open_impossible_transitions
@@ -45,7 +47,7 @@ module ProjectManagement
           create_issue
           resolve_issue
 
-          assert_events issue_opened, issue_resolved
+          assert_events(issue_opened, issue_resolved)
         end
 
         def test_resolved_from_in_progress
@@ -53,7 +55,7 @@ module ProjectManagement
           start_issue_progress
           resolve_issue
 
-          assert_events issue_opened, issue_progress_started, issue_resolved
+          assert_events(issue_opened, issue_progress_started, issue_resolved)
         end
 
         def test_resolved_from_reopened
@@ -62,10 +64,12 @@ module ProjectManagement
           reopen_issue
           resolve_issue
 
-          assert_events issue_opened,
-                        issue_closed,
-                        issue_reopened,
-                        issue_resolved
+          assert_events(
+            issue_opened,
+            issue_closed,
+            issue_reopened,
+            issue_resolved
+          )
         end
 
         def test_resolved_impossible_transitions
@@ -82,7 +86,7 @@ module ProjectManagement
           create_issue
           close_issue
 
-          assert_events issue_opened, issue_closed
+          assert_events(issue_opened, issue_closed)
         end
 
         def test_closed_from_in_progress
@@ -90,7 +94,7 @@ module ProjectManagement
           start_issue_progress
           close_issue
 
-          assert_events issue_opened, issue_progress_started, issue_closed
+          assert_events(issue_opened, issue_progress_started, issue_closed)
         end
 
         def test_closed_from_resolved
@@ -98,7 +102,7 @@ module ProjectManagement
           resolve_issue
           close_issue
 
-          assert_events issue_opened, issue_resolved, issue_closed
+          assert_events(issue_opened, issue_resolved, issue_closed)
         end
 
         def test_closed_from_reopened
@@ -107,7 +111,12 @@ module ProjectManagement
           reopen_issue
           close_issue
 
-          assert_events issue_opened, issue_closed, issue_reopened, issue_closed
+          assert_events(
+            issue_opened,
+            issue_closed,
+            issue_reopened,
+            issue_closed
+          )
         end
 
         def test_closed_impossible_transitions
@@ -125,7 +134,7 @@ module ProjectManagement
           create_issue
           start_issue_progress
 
-          assert_events issue_opened, issue_progress_started
+          assert_events(issue_opened, issue_progress_started)
         end
 
         def test_in_progress_from_reopened
@@ -134,10 +143,12 @@ module ProjectManagement
           reopen_issue
           start_issue_progress
 
-          assert_events issue_opened,
-                        issue_closed,
-                        issue_reopened,
-                        issue_progress_started
+          assert_events(
+            issue_opened,
+            issue_closed,
+            issue_reopened,
+            issue_progress_started
+          )
         end
 
         def test_in_progress_impossible_transitions
@@ -154,7 +165,7 @@ module ProjectManagement
           close_issue
           reopen_issue
 
-          assert_events issue_opened, issue_closed, issue_reopened
+          assert_events(issue_opened, issue_closed, issue_reopened)
         end
 
         def test_reopened_from_resolved
@@ -162,7 +173,7 @@ module ProjectManagement
           resolve_issue
           reopen_issue
 
-          assert_events issue_opened, issue_resolved, issue_reopened
+          assert_events(issue_opened, issue_resolved, issue_reopened)
         end
 
         def test_reopened_impossible_transitions
@@ -181,10 +192,12 @@ module ProjectManagement
           stop_issue_progress
           start_issue_progress
 
-          assert_events issue_opened,
-                        issue_progress_started,
-                        issue_progress_stopped,
-                        issue_progress_started
+          assert_events(
+            issue_opened,
+            issue_progress_started,
+            issue_progress_stopped,
+            issue_progress_started
+          )
         end
 
         def test_in_progress_from_open_after_resolved_and_reopened
@@ -194,11 +207,13 @@ module ProjectManagement
           reopen_issue
           start_issue_progress
 
-          assert_events issue_opened,
-                        issue_progress_started,
-                        issue_resolved,
-                        issue_reopened,
-                        issue_progress_started
+          assert_events(
+            issue_opened,
+            issue_progress_started,
+            issue_resolved,
+            issue_reopened,
+            issue_progress_started
+          )
         end
 
         def test_reopened_from_closed_after_progress_started
@@ -207,10 +222,12 @@ module ProjectManagement
           close_issue
           reopen_issue
 
-          assert_events issue_opened,
-                        issue_progress_started,
-                        issue_closed,
-                        issue_reopened
+          assert_events(
+            issue_opened,
+            issue_progress_started,
+            issue_closed,
+            issue_reopened
+          )
         end
 
         def test_reopened_from_closed_after_progress_started_and_resolved
@@ -220,11 +237,13 @@ module ProjectManagement
           close_issue
           reopen_issue
 
-          assert_events issue_opened,
-                        issue_progress_started,
-                        issue_resolved,
-                        issue_closed,
-                        issue_reopened
+          assert_events(
+            issue_opened,
+            issue_progress_started,
+            issue_resolved,
+            issue_closed,
+            issue_reopened
+          )
         end
 
         def test_closed_from_resolved_after_progress_started
@@ -233,10 +252,12 @@ module ProjectManagement
           resolve_issue
           close_issue
 
-          assert_events issue_opened,
-                        issue_progress_started,
-                        issue_resolved,
-                        issue_closed
+          assert_events(
+            issue_opened,
+            issue_progress_started,
+            issue_resolved,
+            issue_closed
+          )
         end
 
         def test_stream_isolation
@@ -244,7 +265,7 @@ module ProjectManagement
           create_additional_issue
           resolve_issue
 
-          assert_events issue_opened, issue_resolved
+          assert_events(issue_opened, issue_resolved)
         end
 
         def test_passed_expected_version
