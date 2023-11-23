@@ -296,8 +296,10 @@ module ProjectManagement
         def assert_error(&) = assert_raises(Error, &)
 
         def assert_events(*events, comparable: ->(e) { [e.event_type, e.data] })
-          assert_equal events.map(&comparable),
-                       event_store.read.stream(stream_name).map(&comparable)
+          assert_equal(
+            events.map(&comparable),
+            event_store.read.stream(stream_name).map(&comparable)
+          )
         end
       end
     end
