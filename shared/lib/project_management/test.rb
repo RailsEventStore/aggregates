@@ -1,13 +1,12 @@
 module ProjectManagement
   module Test
-    def self.with(command_bus:, event_store:, configuration:)
+    def self.with(command_handler:, event_store:)
       Module.new do
-        attr_reader :event_store, :command_bus
+        attr_reader :event_store, :command_handler
 
         define_method :before_setup do
-          @command_bus = command_bus.call
           @event_store = event_store.call
-          configuration.call(@event_store, @command_bus)
+          @command_handler = command_handler.call(@event_store)
         end
 
         def test_impossible_initial_transitions
@@ -29,7 +28,9 @@ module ProjectManagement
           start_issue_progress
           stop_issue_progress
 
-          assert_events issue_opened, issue_progress_started, issue_progress_stopped
+          assert_events issue_opened,
+                        issue_progress_started,
+                        issue_progress_stopped
         end
 
         def test_open_impossible_transitions
@@ -61,7 +62,10 @@ module ProjectManagement
           reopen_issue
           resolve_issue
 
-          assert_events issue_opened, issue_closed, issue_reopened, issue_resolved
+          assert_events issue_opened,
+                        issue_closed,
+                        issue_reopened,
+                        issue_resolved
         end
 
         def test_resolved_impossible_transitions
@@ -130,7 +134,10 @@ module ProjectManagement
           reopen_issue
           start_issue_progress
 
-          assert_events issue_opened, issue_closed, issue_reopened, issue_progress_started
+          assert_events issue_opened,
+                        issue_closed,
+                        issue_reopened,
+                        issue_progress_started
         end
 
         def test_in_progress_impossible_transitions
@@ -174,7 +181,10 @@ module ProjectManagement
           stop_issue_progress
           start_issue_progress
 
-          assert_events issue_opened, issue_progress_started, issue_progress_stopped, issue_progress_started
+          assert_events issue_opened,
+                        issue_progress_started,
+                        issue_progress_stopped,
+                        issue_progress_started
         end
 
         def test_in_progress_from_open_after_resolved_and_reopened
@@ -184,7 +194,11 @@ module ProjectManagement
           reopen_issue
           start_issue_progress
 
-          assert_events issue_opened, issue_progress_started, issue_resolved, issue_reopened, issue_progress_started
+          assert_events issue_opened,
+                        issue_progress_started,
+                        issue_resolved,
+                        issue_reopened,
+                        issue_progress_started
         end
 
         def test_reopened_from_closed_after_progress_started
@@ -193,7 +207,10 @@ module ProjectManagement
           close_issue
           reopen_issue
 
-          assert_events issue_opened, issue_progress_started, issue_closed, issue_reopened
+          assert_events issue_opened,
+                        issue_progress_started,
+                        issue_closed,
+                        issue_reopened
         end
 
         def test_reopened_from_closed_after_progress_started_and_resolved
@@ -203,7 +220,11 @@ module ProjectManagement
           close_issue
           reopen_issue
 
-          assert_events issue_opened, issue_progress_started, issue_resolved, issue_closed, issue_reopened
+          assert_events issue_opened,
+                        issue_progress_started,
+                        issue_resolved,
+                        issue_closed,
+                        issue_reopened
         end
 
         def test_closed_from_resolved_after_progress_started
@@ -212,7 +233,10 @@ module ProjectManagement
           resolve_issue
           close_issue
 
-          assert_events issue_opened, issue_progress_started, issue_resolved, issue_closed
+          assert_events issue_opened,
+                        issue_progress_started,
+                        issue_resolved,
+                        issue_closed
         end
 
         def test_stream_isolation
@@ -240,19 +264,22 @@ module ProjectManagement
 
         def stream_name = "Issue$#{issue_id}"
 
-        def create_issue = command_bus.(CreateIssue.new(issue_id))
+        def create_issue = command_handler.call(CreateIssue.new(issue_id))
 
-        def create_additional_issue = command_bus.(CreateIssue.new(additional_issue_id))
+        def create_additional_issue =
+          command_handler.call(CreateIssue.new(additional_issue_id))
 
-        def reopen_issue = command_bus.(ReopenIssue.new(issue_id))
+        def reopen_issue = command_handler.call(ReopenIssue.new(issue_id))
 
-        def close_issue = command_bus.(CloseIssue.new(issue_id))
+        def close_issue = command_handler.call(CloseIssue.new(issue_id))
 
-        def resolve_issue = command_bus.(ResolveIssue.new(issue_id))
+        def resolve_issue = command_handler.call(ResolveIssue.new(issue_id))
 
-        def start_issue_progress = command_bus.(StartIssueProgress.new(issue_id))
+        def start_issue_progress =
+          command_handler.call(StartIssueProgress.new(issue_id))
 
-        def stop_issue_progress = command_bus.(StopIssueProgress.new(issue_id))
+        def stop_issue_progress =
+          command_handler.call(StopIssueProgress.new(issue_id))
 
         def issue_opened = IssueOpened.new(data: issue_data)
 
@@ -269,7 +296,8 @@ module ProjectManagement
         def assert_error(&) = assert_raises(Error, &)
 
         def assert_events(*events, comparable: ->(e) { [e.event_type, e.data] })
-          assert_equal events.map(&comparable), event_store.read.stream(stream_name).map(&comparable)
+          assert_equal events.map(&comparable),
+                       event_store.read.stream(stream_name).map(&comparable)
         end
 
         def assert_version(version_number)
@@ -282,7 +310,11 @@ module ProjectManagement
             captured_version = expected_version
           end
           event_store.stub(:publish, fake_publish) { yield }
-          event_store.publish(captured_events, stream_name: captured_stream, expected_version: captured_version)
+          event_store.publish(
+            captured_events,
+            stream_name: captured_stream,
+            expected_version: captured_version
+          )
           assert_equal version_number, captured_version
         end
       end

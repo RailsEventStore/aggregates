@@ -4,6 +4,25 @@ module ProjectManagement
       @event_store = event_store
     end
 
+    def call(cmd)
+      case cmd
+      when CreateIssue
+        create(cmd)
+      when ResolveIssue
+        resolve(cmd)
+      when CloseIssue
+        close(cmd)
+      when ReopenIssue
+        reopen(cmd)
+      when StartIssueProgress
+        start(cmd)
+      when StopIssueProgress
+        stop(cmd)
+      end
+    rescue Issue::InvalidTransition
+      raise Error
+    end
+
     def create(cmd)
       with_aggregate(cmd.id) do |issue|
         issue.create
@@ -57,9 +76,11 @@ module ProjectManagement
     def with_aggregate(id)
       state = IssueProjection.new(event_store).call(stream_name(id))
       event = yield Issue.new(state.status)
-      event_store.publish(event, stream_name: stream_name(id), expected_version: state.version)
-    rescue Issue::InvalidTransition
-      raise Error
+      event_store.publish(
+        event,
+        stream_name: stream_name(id),
+        expected_version: state.version
+      )
     end
   end
 end

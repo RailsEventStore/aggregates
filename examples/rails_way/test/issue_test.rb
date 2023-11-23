@@ -1,7 +1,6 @@
 require "minitest/autorun"
 require "minitest/mock"
 require "mutant/minitest/coverage"
-require "arkency/command_bus"
 require "ruby_event_store"
 
 require_relative "../lib/project_management"
@@ -9,9 +8,10 @@ require_relative "../lib/project_management"
 module ProjectManagement
   class IssueTest < Minitest::Test
     include Test.with(
-              command_bus: -> { Arkency::CommandBus.new },
-              event_store: -> { RubyEventStore::Client.new },
-              configuration: Configuration.new
+              command_handler: ->(event_store) do
+                ProjectManagement::CommandHandler.new(event_store)
+              end,
+              event_store: -> { RubyEventStore::Client.new }
             )
 
     cover "ProjectManagement::Issue*"

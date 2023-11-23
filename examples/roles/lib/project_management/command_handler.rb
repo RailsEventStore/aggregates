@@ -4,6 +4,25 @@ module ProjectManagement
       @event_store = event_store
     end
 
+    def call(cmd)
+      case cmd
+      when CreateIssue
+        create(cmd)
+      when ResolveIssue
+        resolve(cmd)
+      when CloseIssue
+        close(cmd)
+      when ReopenIssue
+        reopen(cmd)
+      when StartIssueProgress
+        start(cmd)
+      when StopIssueProgress
+        stop(cmd)
+      end
+    rescue Issue::InvalidTransition
+      raise Error
+    end
+
     def create(cmd)
       load_issue(cmd.id) do |issue|
         issue.open
@@ -76,9 +95,11 @@ module ProjectManagement
             [new_issue, version + 1]
           end
 
-      @event_store.publish(yield(issue), stream_name: stream_name(id), expected_version: version)
-    rescue Issue::InvalidTransition
-      raise Error
+      @event_store.publish(
+        yield(issue),
+        stream_name: stream_name(id),
+        expected_version: version
+      )
     end
   end
 end

@@ -4,8 +4,29 @@ module ProjectManagement
       @repo = AggregateRepository.new(event_store)
     end
 
+    def call(cmd)
+      case cmd
+      when CreateIssue
+        create(cmd)
+      when ResolveIssue
+        resolve(cmd)
+      when CloseIssue
+        close(cmd)
+      when ReopenIssue
+        reopen(cmd)
+      when StartIssueProgress
+        start(cmd)
+      when StopIssueProgress
+        stop(cmd)
+      end
+    rescue Issue::InvalidTransition
+      raise Error
+    end
+
     def create(cmd)
-      with_issue(cmd.id) { |issue, store| issue.create(cmd.id) { |ev| store.(ev) } }
+      with_issue(cmd.id) do |issue, store|
+        issue.create(cmd.id) { |ev| store.(ev) }
+      end
     end
 
     def resolve(cmd)
@@ -34,9 +55,9 @@ module ProjectManagement
 
     def with_issue(id)
       stream = "Issue$#{id}"
-      repo.with_aggregate(Issue.new, stream) { |issue, store| yield issue, store }
-    rescue Issue::InvalidTransition
-      raise Error
+      repo.with_aggregate(Issue.new, stream) do |issue, store|
+        yield issue, store
+      end
     end
   end
 end

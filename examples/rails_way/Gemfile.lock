@@ -24,8 +24,6 @@ GEM
       minitest (>= 5.1)
       mutex_m
       tzinfo (~> 2.0)
-    arkency-command_bus (0.4.1)
-      concurrent-ruby
     ast (2.4.2)
     base64 (0.1.1)
     bigdecimal (3.1.4)
@@ -72,7 +70,6 @@ PLATFORMS
 DEPENDENCIES
   aasm
   activerecord
-  arkency-command_bus
   minitest
   mutant
   mutant-license!

@@ -4,6 +4,23 @@ module ProjectManagement
       @event_store = event_store
     end
 
+    def call(cmd)
+      case cmd
+      when CreateIssue
+        create(cmd)
+      when ResolveIssue
+        resolve(cmd)
+      when CloseIssue
+        close(cmd)
+      when ReopenIssue
+        reopen(cmd)
+      when StartIssueProgress
+        start(cmd)
+      when StopIssueProgress
+        stop(cmd)
+      end
+    end
+
     def create(cmd)
       create_issue(cmd.id) { IssueOpened.new(data: { issue_id: cmd.id }) }
     end

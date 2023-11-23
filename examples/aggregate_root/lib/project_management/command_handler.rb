@@ -1,9 +1,26 @@
 module ProjectManagement
   class CommandHandler
-    Rejected = Class.new(PM::Error)
-
     def initialize(event_store)
       @repository = AggregateRoot::Repository.new(event_store)
+    end
+
+    def call(cmd)
+      case cmd
+      when CreateIssue
+        create(cmd)
+      when ResolveIssue
+        resolve(cmd)
+      when CloseIssue
+        close(cmd)
+      when ReopenIssue
+        reopen(cmd)
+      when StartIssueProgress
+        start(cmd)
+      when StopIssueProgress
+        stop(cmd)
+      end
+    rescue Issue::InvalidTransition
+      raise Error
     end
 
     def create(cmd) = with_aggregate(cmd.id) { |issue| issue.open }
@@ -17,8 +34,6 @@ module ProjectManagement
 
     def with_aggregate(id, &block)
       @repository.with_aggregate(Issue.new(id), "Issue$#{id}", &block)
-    rescue Issue::InvalidTransition
-      raise Rejected
     end
   end
 end

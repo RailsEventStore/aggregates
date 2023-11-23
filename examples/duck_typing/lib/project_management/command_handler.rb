@@ -4,6 +4,25 @@ module ProjectManagement
       @event_store = event_store
     end
 
+    def call(cmd)
+      case cmd
+      when CreateIssue
+        create(cmd)
+      when ResolveIssue
+        resolve(cmd)
+      when CloseIssue
+        close(cmd)
+      when ReopenIssue
+        reopen(cmd)
+      when StartIssueProgress
+        start(cmd)
+      when StopIssueProgress
+        stop(cmd)
+      end
+    rescue NoMethodError
+      raise Error
+    end
+
     def create(cmd)
       load_issue(cmd.id) do |issue|
         issue.open
@@ -79,8 +98,6 @@ module ProjectManagement
         stream_name: stream_name(id),
         expected_version: version
       )
-    rescue NoMethodError
-      raise Error
     end
   end
 end
