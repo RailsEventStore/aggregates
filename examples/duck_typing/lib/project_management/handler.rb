@@ -1,5 +1,5 @@
 module ProjectManagement
-  class CommandHandler
+  class Handler
     def initialize(event_store)
       @event_store = event_store
     end
@@ -19,7 +19,7 @@ module ProjectManagement
       when StopIssueProgress
         stop(cmd)
       end
-    rescue Issue::InvalidTransition
+    rescue NoMethodError
       raise Error
     end
 
@@ -67,33 +67,31 @@ module ProjectManagement
 
     private
 
-    def stream_name(id)
-      "Issue$#{id}"
-    end
+    def stream_name(id) = "Issue$#{id}"
 
     def load_issue(id)
-      issue = Issue.new
-      @event_store
-        .read
-        .stream(stream_name(id))
-        .each do |event|
-          case event
-          when IssueOpened
-            issue = issue.open
-          when IssueProgressStarted
-            issue = issue.start
-          when IssueProgressStopped
-            issue = issue.stop
-          when IssueResolved
-            issue = issue.resolve
-          when IssueReopened
-            issue = issue.reopen
-          when IssueClosed
-            issue = issue.close
+      issue =
+        @event_store
+          .read
+          .stream(stream_name(id))
+          .reduce(Issue.new) do |issue, event|
+            case event
+            when IssueOpened
+              issue.open
+            when IssueProgressStarted
+              issue.start
+            when IssueProgressStopped
+              issue.stop
+            when IssueResolved
+              issue.resolve
+            when IssueReopened
+              issue.reopen
+            when IssueClosed
+              issue.close
+            end
           end
-        end
-      events = yield issue
-      @event_store.publish(events, stream_name: stream_name(id))
+
+      @event_store.publish(yield(issue), stream_name: stream_name(id))
     end
   end
 end

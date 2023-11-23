@@ -1,5 +1,5 @@
 module ProjectManagement
-  class CommandHandler
+  class Handler
     def initialize(event_store)
       @repo = AggregateRepository.new(event_store)
     end
@@ -24,29 +24,27 @@ module ProjectManagement
     end
 
     def create(cmd)
-      with_issue(cmd.id) do |issue, store|
-        issue.create(cmd.id) { |ev| store.(ev) }
-      end
+      with_issue(cmd.id) { |issue| issue.create(cmd.id) }
     end
 
     def resolve(cmd)
-      with_issue(cmd.id) { |issue, store| issue.resolve { |ev| store.(ev) } }
+      with_issue(cmd.id) { |issue| issue.resolve }
     end
 
     def close(cmd)
-      with_issue(cmd.id) { |issue, store| issue.close { |ev| store.(ev) } }
+      with_issue(cmd.id) { |issue| issue.close }
     end
 
     def reopen(cmd)
-      with_issue(cmd.id) { |issue, store| issue.reopen { |ev| store.(ev) } }
+      with_issue(cmd.id) { |issue| issue.reopen }
     end
 
     def start(cmd)
-      with_issue(cmd.id) { |issue, store| issue.start { |ev| store.(ev) } }
+      with_issue(cmd.id) { |issue| issue.start }
     end
 
     def stop(cmd)
-      with_issue(cmd.id) { |issue, store| issue.stop { |ev| store.(ev) } }
+      with_issue(cmd.id) { |issue| issue.stop }
     end
 
     private
@@ -55,8 +53,8 @@ module ProjectManagement
 
     def with_issue(id)
       stream = "Issue$#{id}"
-      repo.with_aggregate(Issue.new, stream) do |issue, store|
-        yield issue, store
+      repo.with_state(IssueState.new, stream) do |state, store|
+        yield Issue.new(state).link(store)
       end
     end
   end

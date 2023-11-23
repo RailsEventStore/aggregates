@@ -1,5 +1,5 @@
 module ProjectManagement
-  class CommandHandler
+  class Handler
     def initialize(event_store) = @event_store = event_store
 
     def call(cmd)

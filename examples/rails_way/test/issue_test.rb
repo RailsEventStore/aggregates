@@ -8,9 +8,7 @@ require_relative "../lib/project_management"
 module ProjectManagement
   class IssueTest < Minitest::Test
     include Test.with(
-              command_handler: ->(event_store) do
-                CommandHandler.new(event_store)
-              end,
+              handler: ->(event_store) { Handler.new(event_store) },
               event_store: -> { RubyEventStore::Client.new }
             )
 

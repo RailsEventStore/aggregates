@@ -1,8 +1,6 @@
 module ProjectManagement
-  class CommandHandler
-    def initialize(event_store)
-      @event_store = event_store
-    end
+  class Handler
+    def initialize(event_store) = @event_store = event_store
 
     def call(cmd)
       case cmd
@@ -34,16 +32,16 @@ module ProjectManagement
 
     def stream_name(id) = "Issue$#{id}"
 
-    def with_transaction(&) = ActiveRecord::Base.transaction(&)
-
     def with_aggregate(id)
-      repository = Issue::Repository.new(id)
-      issue = Issue.new(repository.load)
+      state =
+        @event_store
+          .read
+          .stream(stream_name(id))
+          .reduce(IssueState.initial(id)) { |state, event| state.apply(event) }
 
-      with_transaction do
-        @event_store.publish(yield(issue), stream_name: stream_name(id))
-        repository.store(issue.state)
-      end
+      yield issue = Issue.new(state)
+
+      @event_store.publish(issue.changes, stream_name: stream_name(id))
     end
   end
 end

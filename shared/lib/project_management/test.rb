@@ -1,12 +1,12 @@
 module ProjectManagement
   module Test
-    def self.with(command_handler:, event_store:)
+    def self.with(handler:, event_store:)
       Module.new do
-        attr_reader :event_store, :command_handler
+        attr_reader :event_store, :handler
 
         define_method :before_setup do
           @event_store = event_store.call
-          @command_handler = command_handler.call(@event_store)
+          @handler = handler.call(@event_store)
         end
 
         def test_impossible_initial_transitions
@@ -268,19 +268,18 @@ module ProjectManagement
 
         def stream_name = "Issue$#{issue_id}"
 
-        def create_issue = command_handler.call(CreateIssue.new(issue_id))
+        def create_issue = handler.call(CreateIssue.new(issue_id))
 
-        def reopen_issue = command_handler.call(ReopenIssue.new(issue_id))
+        def reopen_issue = handler.call(ReopenIssue.new(issue_id))
 
-        def close_issue = command_handler.call(CloseIssue.new(issue_id))
+        def close_issue = handler.call(CloseIssue.new(issue_id))
 
-        def resolve_issue = command_handler.call(ResolveIssue.new(issue_id))
+        def resolve_issue = handler.call(ResolveIssue.new(issue_id))
 
         def start_issue_progress =
-          command_handler.call(StartIssueProgress.new(issue_id))
+          handler.call(StartIssueProgress.new(issue_id))
 
-        def stop_issue_progress =
-          command_handler.call(StopIssueProgress.new(issue_id))
+        def stop_issue_progress = handler.call(StopIssueProgress.new(issue_id))
 
         def issue_opened = IssueOpened.new(data: issue_data)
 

@@ -1,5 +1,5 @@
 module ProjectManagement
-  class CommandHandler
+  class Handler
     def initialize(event_store)
       @event_store = event_store
     end
@@ -72,28 +72,28 @@ module ProjectManagement
     end
 
     def load_issue(id)
-      issue =
-        @event_store
-          .read
-          .stream(stream_name(id))
-          .reduce(Issue.new) do |issue, event|
-            case event
-            when IssueOpened
-              issue.open
-            when IssueProgressStarted
-              issue.start
-            when IssueProgressStopped
-              issue.stop
-            when IssueResolved
-              issue.resolve
-            when IssueReopened
-              issue.reopen
-            when IssueClosed
-              issue.close
-            end
+      issue = Issue.new
+      @event_store
+        .read
+        .stream(stream_name(id))
+        .each do |event|
+          case event
+          when IssueOpened
+            issue = issue.open
+          when IssueProgressStarted
+            issue = issue.start
+          when IssueProgressStopped
+            issue = issue.stop
+          when IssueResolved
+            issue = issue.resolve
+          when IssueReopened
+            issue = issue.reopen
+          when IssueClosed
+            issue = issue.close
           end
-
-      @event_store.publish(yield(issue), stream_name: stream_name(id))
+        end
+      events = yield issue
+      @event_store.publish(events, stream_name: stream_name(id))
     end
   end
 end

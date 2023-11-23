@@ -1,5 +1,5 @@
 module ProjectManagement
-  class CommandHandler
+  class Handler
     def initialize(event_store)
       @event_store = event_store
     end
@@ -19,59 +19,64 @@ module ProjectManagement
       when StopIssueProgress
         stop(cmd)
       end
+    rescue Issue::InvalidTransition
+      raise Error
     end
 
     def create(cmd)
       with_aggregate(cmd.id) do |issue|
-        raise Error unless issue.can_create?
+        issue.create
         IssueOpened.new(data: { issue_id: cmd.id })
       end
     end
 
     def resolve(cmd)
       with_aggregate(cmd.id) do |issue|
-        raise Error unless issue.can_resolve?
+        issue.resolve
         IssueResolved.new(data: { issue_id: cmd.id })
       end
     end
 
     def close(cmd)
       with_aggregate(cmd.id) do |issue|
-        raise Error unless issue.can_close?
+        issue.close
         IssueClosed.new(data: { issue_id: cmd.id })
       end
     end
 
     def reopen(cmd)
       with_aggregate(cmd.id) do |issue|
-        raise Error unless issue.can_reopen?
+        issue.reopen
         IssueReopened.new(data: { issue_id: cmd.id })
       end
     end
 
     def start(cmd)
       with_aggregate(cmd.id) do |issue|
-        raise Error unless issue.can_start?
+        issue.start
         IssueProgressStarted.new(data: { issue_id: cmd.id })
       end
     end
 
     def stop(cmd)
       with_aggregate(cmd.id) do |issue|
-        raise Error unless issue.can_stop?
+        issue.stop
         IssueProgressStopped.new(data: { issue_id: cmd.id })
       end
     end
 
     private
 
-    def stream_name(id) = "Issue$#{id}"
+    attr_reader :event_store
+
+    def stream_name(id)
+      "Issue$#{id}"
+    end
 
     def with_aggregate(id)
-      issue =
-        IssueProjection.new(@event_store).call(Issue.initial, stream_name(id))
-
-      @event_store.publish(yield(issue), stream_name: stream_name(id))
+      state = IssueProjection.new(event_store).call(stream_name(id))
+      event = yield Issue.new(state.status)
+      event_store.publish(event, stream_name: stream_name(id))
     end
   end
 end

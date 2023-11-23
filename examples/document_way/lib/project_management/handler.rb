@@ -1,7 +1,7 @@
 module ProjectManagement
-  class CommandHandler
+  class Handler
     def initialize(event_store)
-      @repository = AggregateRoot::Repository.new(event_store)
+      @event_store = event_store
     end
 
     def call(cmd)
@@ -32,8 +32,18 @@ module ProjectManagement
 
     private
 
-    def with_aggregate(id, &block)
-      @repository.with_aggregate(Issue.new(id), "Issue$#{id}", &block)
+    def stream_name(id) = "Issue$#{id}"
+
+    def with_transaction(&) = ActiveRecord::Base.transaction(&)
+
+    def with_aggregate(id)
+      repository = Issue::Repository.new(id)
+      issue = Issue.new(repository.load)
+
+      with_transaction do
+        @event_store.publish(yield(issue), stream_name: stream_name(id))
+        repository.store(issue.state)
+      end
     end
   end
 end

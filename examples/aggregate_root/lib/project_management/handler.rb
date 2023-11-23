@@ -1,6 +1,8 @@
 module ProjectManagement
-  class CommandHandler
-    def initialize(event_store) = @event_store = event_store
+  class Handler
+    def initialize(event_store)
+      @repository = AggregateRoot::Repository.new(event_store)
+    end
 
     def call(cmd)
       case cmd
@@ -30,18 +32,8 @@ module ProjectManagement
 
     private
 
-    def stream_name(id) = "Issue$#{id}"
-
-    def with_aggregate(id)
-      state =
-        @event_store
-          .read
-          .stream(stream_name(id))
-          .reduce(IssueState.initial(id)) { |state, event| state.apply(event) }
-
-      yield issue = Issue.new(state)
-
-      @event_store.publish(issue.changes, stream_name: stream_name(id))
+    def with_aggregate(id, &block)
+      @repository.with_aggregate(Issue.new(id), "Issue$#{id}", &block)
     end
   end
 end

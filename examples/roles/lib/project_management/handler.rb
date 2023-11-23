@@ -1,5 +1,5 @@
 module ProjectManagement
-  class CommandHandler
+  class Handler
     def initialize(event_store)
       @event_store = event_store
     end
@@ -19,10 +19,15 @@ module ProjectManagement
       when StopIssueProgress
         stop(cmd)
       end
+    rescue Issue::InvalidTransition
+      raise Error
     end
 
     def create(cmd)
-      create_issue(cmd.id) { IssueOpened.new(data: { issue_id: cmd.id }) }
+      load_issue(cmd.id) do |issue|
+        issue.open
+        IssueOpened.new(data: { issue_id: cmd.id })
+      end
     end
 
     def close(cmd)
@@ -62,27 +67,33 @@ module ProjectManagement
 
     private
 
-    def stream_name(id) = "Issue$#{id}"
-
-    def in_transaction(&) = ActiveRecord::Base.transaction(&)
-
-    def create_issue(id)
-      in_transaction do
-        Issue.create!(uuid: id)
-        @event_store.publish(yield, stream_name: stream_name(id))
-      end
-    rescue ActiveRecord::RecordNotUnique
-      raise Error
+    def stream_name(id)
+      "Issue$#{id}"
     end
 
     def load_issue(id)
-      in_transaction do
-        issue = Issue.find_by!(uuid: id)
-        @event_store.publish(yield(issue), stream_name: stream_name(id))
-        issue.save!
-      end
-    rescue AASM::InvalidTransition, ActiveRecord::RecordNotFound
-      raise Error
+      issue =
+        @event_store
+          .read
+          .stream(stream_name(id))
+          .reduce(Issue.new) do |issue, event|
+            case event
+            when IssueOpened
+              issue.open
+            when IssueProgressStarted
+              issue.start
+            when IssueProgressStopped
+              issue.stop
+            when IssueResolved
+              issue.resolve
+            when IssueReopened
+              issue.reopen
+            when IssueClosed
+              issue.close
+            end
+          end
+
+      @event_store.publish(yield(issue), stream_name: stream_name(id))
     end
   end
 end
