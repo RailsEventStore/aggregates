@@ -17,7 +17,9 @@ module ProjectManagement
     end
 
     def close
-      raise InvalidTransition unless open? || in_progress? || reopened? || resolved?
+      unless open? || in_progress? || reopened? || resolved?
+        raise InvalidTransition
+      end
     end
 
     def reopen

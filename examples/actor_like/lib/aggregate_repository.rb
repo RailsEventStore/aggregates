@@ -15,7 +15,11 @@ class AggregateRepository
       end
 
     store = ->(event) do
-      @event_store.publish(event, stream_name: stream, expected_version: version)
+      @event_store.publish(
+        event,
+        stream_name: stream,
+        expected_version: version
+      )
       true
     end
     yield state, store
