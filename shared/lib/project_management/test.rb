@@ -2,13 +2,6 @@ module ProjectManagement
   module Test
     def self.with(handler:, event_store:)
       Module.new do
-        attr_reader :event_store, :handler
-
-        define_method :before_setup do
-          @event_store = event_store.call
-          @handler = handler.call(@event_store)
-        end
-
         def test_impossible_initial_transitions
           assert_error { start_issue_progress }
           assert_error { stop_issue_progress }
@@ -261,6 +254,13 @@ module ProjectManagement
         end
 
         private
+
+        attr_reader :event_store, :handler
+
+        define_method :before_setup do
+          @event_store = event_store.call
+          @handler = handler.call(@event_store)
+        end
 
         def issue_id = "c97a6121-f933-4609-9e96-e77dc2f67a16"
 
