@@ -253,6 +253,14 @@ module ProjectManagement
           )
         end
 
+        def test_stream_isolation
+          create_issue
+          handler.call(CreateIssue.new(SecureRandom.uuid))
+          resolve_issue
+
+          assert_events(issue_opened, issue_resolved)
+        end
+
         private
 
         attr_reader :event_store, :handler
