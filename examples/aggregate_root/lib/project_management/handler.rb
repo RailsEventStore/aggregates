@@ -26,45 +26,45 @@ module ProjectManagement
     private
 
     def create(cmd)
-      @repository.with_aggregate(
-        Issue.new(cmd.id),
-        stream_name(cmd.id)
-      ) { |issue| issue.open }
+      issue, stream_name = Issue.new(cmd.id), stream_name(cmd.id)
+      @repository.load(issue, stream_name)
+      issue.open
+      @repository.store(issue, stream_name)
     end
 
     def resolve(cmd)
-      issue = Issue.new(cmd.id)
-      @repository.load(issue, stream_name(cmd.id))
+      issue, stream_name = Issue.new(cmd.id), stream_name(cmd.id)
+      @repository.load(issue, stream_name)
       issue.resolve
-      @repository.store(issue, stream_name(cmd.id))
+      @repository.store(issue, stream_name)
     end
 
     def close(cmd)
-      issue = Issue.new(cmd.id)
-      @repository.load(issue, stream_name(cmd.id))
+      issue, stream_name = Issue.new(cmd.id), stream_name(cmd.id)
+      @repository.load(issue, stream_name)
       issue.close
-      @repository.store(issue, stream_name(cmd.id))
+      @repository.store(issue, stream_name)
     end
 
     def reopen(cmd)
-      issue = Issue.new(cmd.id)
-      @repository.load(issue, stream_name(cmd.id))
+      issue, stream_name = Issue.new(cmd.id), stream_name(cmd.id)
+      @repository.load(issue, stream_name)
       issue.reopen
-      @repository.store(issue, stream_name(cmd.id))
+      @repository.store(issue, stream_name)
     end
 
     def start(cmd)
-      issue = Issue.new(cmd.id)
-      @repository.load(issue, stream_name(cmd.id))
+      issue, stream_name = Issue.new(cmd.id), stream_name(cmd.id)
+      @repository.load(issue, stream_name)
       issue.start
-      @repository.store(issue, stream_name(cmd.id))
+      @repository.store(issue, stream_name)
     end
 
     def stop(cmd)
-      issue = Issue.new(cmd.id)
-      @repository.load(issue, stream_name(cmd.id))
+      issue, stream_name = Issue.new(cmd.id), stream_name(cmd.id)
+      @repository.load(issue, stream_name)
       issue.stop
-      @repository.store(issue, stream_name(cmd.id))
+      @repository.store(issue, stream_name)
     end
 
     def stream_name(id) = "Issue$#{id}"
