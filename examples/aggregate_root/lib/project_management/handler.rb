@@ -6,18 +6,18 @@ module ProjectManagement
 
     def call(cmd)
       case cmd
-      when CreateIssue
-        create(cmd)
-      when ResolveIssue
-        resolve(cmd)
-      when CloseIssue
-        close(cmd)
-      when ReopenIssue
-        reopen(cmd)
-      when StartIssueProgress
-        start(cmd)
-      when StopIssueProgress
-        stop(cmd)
+      in CreateIssue[id:]
+        create(id)
+      in ResolveIssue[id:]
+        resolve(id)
+      in CloseIssue[id:]
+        close(id)
+      in ReopenIssue[id:]
+        reopen(id)
+      in StartIssueProgress[id:]
+        start(id)
+      in StopIssueProgress[id:]
+        stop(id)
       end
     rescue Issue::InvalidTransition
       raise Error
@@ -25,43 +25,43 @@ module ProjectManagement
 
     private
 
-    def create(cmd)
-      issue, stream_name = Issue.new(cmd.id), stream_name(cmd.id)
+    def create(id)
+      issue, stream_name = Issue.new(id), stream_name(id)
       @repository.load(issue, stream_name)
       issue.open
       @repository.store(issue, stream_name)
     end
 
-    def resolve(cmd)
-      issue, stream_name = Issue.new(cmd.id), stream_name(cmd.id)
+    def resolve(id)
+      issue, stream_name = Issue.new(id), stream_name(id)
       @repository.load(issue, stream_name)
       issue.resolve
       @repository.store(issue, stream_name)
     end
 
-    def close(cmd)
-      issue, stream_name = Issue.new(cmd.id), stream_name(cmd.id)
+    def close(id)
+      issue, stream_name = Issue.new(id), stream_name(id)
       @repository.load(issue, stream_name)
       issue.close
       @repository.store(issue, stream_name)
     end
 
-    def reopen(cmd)
-      issue, stream_name = Issue.new(cmd.id), stream_name(cmd.id)
+    def reopen(id)
+      issue, stream_name = Issue.new(id), stream_name(id)
       @repository.load(issue, stream_name)
       issue.reopen
       @repository.store(issue, stream_name)
     end
 
-    def start(cmd)
-      issue, stream_name = Issue.new(cmd.id), stream_name(cmd.id)
+    def start(id)
+      issue, stream_name = Issue.new(id), stream_name(id)
       @repository.load(issue, stream_name)
       issue.start
       @repository.store(issue, stream_name)
     end
 
-    def stop(cmd)
-      issue, stream_name = Issue.new(cmd.id), stream_name(cmd.id)
+    def stop(id)
+      issue, stream_name = Issue.new(id), stream_name(id)
       @repository.load(issue, stream_name)
       issue.stop
       @repository.store(issue, stream_name)
