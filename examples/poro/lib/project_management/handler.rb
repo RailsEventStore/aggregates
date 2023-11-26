@@ -70,7 +70,7 @@ module ProjectManagement
     def stream_name(id) = "Issue$#{id}"
 
     def with_aggregate(id)
-      state = IssueProjection.new(event_store).call(stream_name(id))
+      state = IssueProjection.new(@event_store).call(stream_name(id))
       event = yield Issue.new(state.status)
       @event_store.append(event, stream_name: stream_name(id))
     end
