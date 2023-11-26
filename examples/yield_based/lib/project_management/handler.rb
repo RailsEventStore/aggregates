@@ -24,9 +24,7 @@ module ProjectManagement
     end
 
     def create(id)
-      with_issue(id) do |issue, store|
-        issue.create(id) { |ev| store.(ev) }
-      end
+      with_issue(id) { |issue, store| issue.create(id) { |ev| store.(ev) } }
     end
 
     def resolve(id)
