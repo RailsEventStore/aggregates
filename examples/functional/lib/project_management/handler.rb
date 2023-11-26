@@ -4,18 +4,18 @@ module ProjectManagement
 
     def call(cmd)
       case cmd
-      when CreateIssue
-        create(cmd.id)
-      when ResolveIssue
-        resolve(cmd.id)
-      when CloseIssue
-        close(cmd.id)
-      when ReopenIssue
-        reopen(cmd.id)
-      when StartIssueProgress
-        start(cmd.id)
-      when StopIssueProgress
-        stop(cmd.id)
+      in CreateIssue[id:]
+        create(id)
+      in ResolveIssue[id:]
+        resolve(id)
+      in CloseIssue[id:]
+        close(id)
+      in ReopenIssue[id:]
+        reopen(id)
+      in StartIssueProgress[id:]
+        start(id)
+      in StopIssueProgress[id:]
+        stop(id)
       end
     end
 
