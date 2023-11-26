@@ -67,16 +67,12 @@ module ProjectManagement
 
     private
 
-    attr_reader :event_store
-
-    def stream_name(id)
-      "Issue$#{id}"
-    end
+    def stream_name(id) = "Issue$#{id}"
 
     def with_aggregate(id)
       state = IssueProjection.new(event_store).call(stream_name(id))
       event = yield Issue.new(state.status)
-      event_store.append(event, stream_name: stream_name(id))
+      @event_store.append(event, stream_name: stream_name(id))
     end
   end
 end
