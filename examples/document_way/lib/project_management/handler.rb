@@ -34,16 +34,12 @@ module ProjectManagement
 
     def stream_name(id) = "Issue$#{id}"
 
-    def with_transaction(&) = ActiveRecord::Base.transaction(&)
-
     def with_aggregate(id)
       repository = Issue::Repository.new(id)
       issue = Issue.new(repository.load)
 
-      with_transaction do
-        @event_store.append(yield(issue), stream_name: stream_name(id))
-        repository.store(issue.state)
-      end
+      @event_store.append(yield(issue), stream_name: stream_name(id))
+      repository.store(issue.state)
     end
   end
 end
