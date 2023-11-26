@@ -7,17 +7,17 @@ module ProjectManagement
     def call(cmd)
       case cmd
       when CreateIssue
-        create(cmd)
+        create(cmd.id)
       when ResolveIssue
-        resolve(cmd)
+        resolve(cmd.id)
       when CloseIssue
-        close(cmd)
+        close(cmd.id)
       when ReopenIssue
-        reopen(cmd)
+        reopen(cmd.id)
       when StartIssueProgress
-        start(cmd)
+        start(cmd.id)
       when StopIssueProgress
-        stop(cmd)
+        stop(cmd.id)
       end
     rescue AASM::InvalidTransition,
            ActiveRecord::RecordNotFound,
@@ -25,42 +25,42 @@ module ProjectManagement
       raise Error
     end
 
-    def create(cmd)
-      create_issue(cmd.id) { IssueOpened.new(data: { issue_id: cmd.id }) }
+    def create(id)
+      create_issue(id) { IssueOpened.new(data: { issue_id: id }) }
     end
 
-    def close(cmd)
-      load_issue(cmd.id) do |issue|
+    def close(id)
+      load_issue(id) do |issue|
         issue.close
-        IssueClosed.new(data: { issue_id: cmd.id })
+        IssueClosed.new(data: { issue_id: id })
       end
     end
 
-    def start(cmd)
-      load_issue(cmd.id) do |issue|
+    def start(id)
+      load_issue(id) do |issue|
         issue.start
-        IssueProgressStarted.new(data: { issue_id: cmd.id })
+        IssueProgressStarted.new(data: { issue_id: id })
       end
     end
 
-    def stop(cmd)
-      load_issue(cmd.id) do |issue|
+    def stop(id)
+      load_issue(id) do |issue|
         issue.stop
-        IssueProgressStopped.new(data: { issue_id: cmd.id })
+        IssueProgressStopped.new(data: { issue_id: id })
       end
     end
 
-    def reopen(cmd)
-      load_issue(cmd.id) do |issue|
+    def reopen(id)
+      load_issue(id) do |issue|
         issue.reopen
-        IssueReopened.new(data: { issue_id: cmd.id })
+        IssueReopened.new(data: { issue_id: id })
       end
     end
 
-    def resolve(cmd)
-      load_issue(cmd.id) do |issue|
+    def resolve(id)
+      load_issue(id) do |issue|
         issue.resolve
-        IssueResolved.new(data: { issue_id: cmd.id })
+        IssueResolved.new(data: { issue_id: id })
       end
     end
 

@@ -7,61 +7,61 @@ module ProjectManagement
     def call(cmd)
       case cmd
       when CreateIssue
-        create(cmd)
+        create(cmd.id)
       when ResolveIssue
-        resolve(cmd)
+        resolve(cmd.id)
       when CloseIssue
-        close(cmd)
+        close(cmd.id)
       when ReopenIssue
-        reopen(cmd)
+        reopen(cmd.id)
       when StartIssueProgress
-        start(cmd)
+        start(cmd.id)
       when StopIssueProgress
-        stop(cmd)
+        stop(cmd.id)
       end
     rescue Issue::InvalidTransition
       raise Error
     end
 
-    def create(cmd)
-      with_aggregate(cmd.id) do |issue|
+    def create(id)
+      with_aggregate(id) do |issue|
         issue.create
-        IssueOpened.new(data: { issue_id: cmd.id })
+        IssueOpened.new(data: { issue_id: id })
       end
     end
 
-    def resolve(cmd)
-      with_aggregate(cmd.id) do |issue|
+    def resolve(id)
+      with_aggregate(id) do |issue|
         issue.resolve
-        IssueResolved.new(data: { issue_id: cmd.id })
+        IssueResolved.new(data: { issue_id: id })
       end
     end
 
-    def close(cmd)
-      with_aggregate(cmd.id) do |issue|
+    def close(id)
+      with_aggregate(id) do |issue|
         issue.close
-        IssueClosed.new(data: { issue_id: cmd.id })
+        IssueClosed.new(data: { issue_id: id })
       end
     end
 
-    def reopen(cmd)
-      with_aggregate(cmd.id) do |issue|
+    def reopen(id)
+      with_aggregate(id) do |issue|
         issue.reopen
-        IssueReopened.new(data: { issue_id: cmd.id })
+        IssueReopened.new(data: { issue_id: id })
       end
     end
 
-    def start(cmd)
-      with_aggregate(cmd.id) do |issue|
+    def start(id)
+      with_aggregate(id) do |issue|
         issue.start
-        IssueProgressStarted.new(data: { issue_id: cmd.id })
+        IssueProgressStarted.new(data: { issue_id: id })
       end
     end
 
-    def stop(cmd)
-      with_aggregate(cmd.id) do |issue|
+    def stop(id)
+      with_aggregate(id) do |issue|
         issue.stop
-        IssueProgressStopped.new(data: { issue_id: cmd.id })
+        IssueProgressStopped.new(data: { issue_id: id })
       end
     end
 

@@ -5,26 +5,26 @@ module ProjectManagement
     def call(cmd)
       case cmd
       when CreateIssue
-        create(cmd)
+        create(cmd.id)
       when ResolveIssue
-        resolve(cmd)
+        resolve(cmd.id)
       when CloseIssue
-        close(cmd)
+        close(cmd.id)
       when ReopenIssue
-        reopen(cmd)
+        reopen(cmd.id)
       when StartIssueProgress
-        start(cmd)
+        start(cmd.id)
       when StopIssueProgress
-        stop(cmd)
+        stop(cmd.id)
       end
     end
 
-    def create(cmd) = with_state(cmd.id) { |state| Issue.open(state) }
-    def resolve(cmd) = with_state(cmd.id) { |state| Issue.resolve(state) }
-    def close(cmd) = with_state(cmd.id) { |state| Issue.close(state) }
-    def reopen(cmd) = with_state(cmd.id) { |state| Issue.reopen(state) }
-    def start(cmd) = with_state(cmd.id) { |state| Issue.start(state) }
-    def stop(cmd) = with_state(cmd.id) { |state| Issue.stop(state) }
+    def create(id) = with_state(id) { |state| Issue.open(state) }
+    def resolve(id) = with_state(id) { |state| Issue.resolve(state) }
+    def close(id) = with_state(id) { |state| Issue.close(state) }
+    def reopen(id) = with_state(id) { |state| Issue.reopen(state) }
+    def start(id) = with_state(id) { |state| Issue.start(state) }
+    def stop(id) = with_state(id) { |state| Issue.stop(state) }
 
     private
 

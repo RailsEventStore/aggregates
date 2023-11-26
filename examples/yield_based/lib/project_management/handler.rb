@@ -7,53 +7,54 @@ module ProjectManagement
     def call(cmd)
       case cmd
       when CreateIssue
-        create(cmd)
+        create(cmd.id)
       when ResolveIssue
-        resolve(cmd)
+        resolve(cmd.id)
       when CloseIssue
-        close(cmd)
+        close(cmd.id)
       when ReopenIssue
-        reopen(cmd)
+        reopen(cmd.id)
       when StartIssueProgress
-        start(cmd)
+        start(cmd.id)
       when StopIssueProgress
-        stop(cmd)
+        stop(cmd.id)
       end
     rescue Issue::InvalidTransition
       raise Error
     end
 
-    def create(cmd)
-      with_issue(cmd.id) do |issue, store|
-        issue.create(cmd.id) { |ev| store.(ev) }
+    def create(id)
+      with_issue(id) do |issue, store|
+        issue.create(id) { |ev| store.(ev) }
       end
     end
 
-    def resolve(cmd)
-      with_issue(cmd.id) { |issue, store| issue.resolve { |ev| store.(ev) } }
+    def resolve(id)
+      with_issue(id) { |issue, store| issue.resolve { |ev| store.(ev) } }
     end
 
-    def close(cmd)
-      with_issue(cmd.id) { |issue, store| issue.close { |ev| store.(ev) } }
+    def close(id)
+      with_issue(id) { |issue, store| issue.close { |ev| store.(ev) } }
     end
 
-    def reopen(cmd)
-      with_issue(cmd.id) { |issue, store| issue.reopen { |ev| store.(ev) } }
+    def reopen(id)
+      with_issue(id) { |issue, store| issue.reopen { |ev| store.(ev) } }
     end
 
-    def start(cmd)
-      with_issue(cmd.id) { |issue, store| issue.start { |ev| store.(ev) } }
+    def start(id)
+      with_issue(id) { |issue, store| issue.start { |ev| store.(ev) } }
     end
 
-    def stop(cmd)
-      with_issue(cmd.id) { |issue, store| issue.stop { |ev| store.(ev) } }
+    def stop(id)
+      with_issue(id) { |issue, store| issue.stop { |ev| store.(ev) } }
     end
 
     private
 
+    def stream_name(id) = "Issue$#{id}"
+
     def with_issue(id)
-      stream = "Issue$#{id}"
-      @repository.with_aggregate(Issue.new, stream) do |issue, store|
+      @repository.with_aggregate(Issue.new, stream_name(id)) do |issue, store|
         yield issue, store
       end
     end

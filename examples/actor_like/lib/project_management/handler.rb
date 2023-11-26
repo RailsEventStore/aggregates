@@ -7,44 +7,44 @@ module ProjectManagement
     def call(cmd)
       case cmd
       when CreateIssue
-        create(cmd)
+        create(cmd.id)
       when ResolveIssue
-        resolve(cmd)
+        resolve(cmd.id)
       when CloseIssue
-        close(cmd)
+        close(cmd.id)
       when ReopenIssue
-        reopen(cmd)
+        reopen(cmd.id)
       when StartIssueProgress
-        start(cmd)
+        start(cmd.id)
       when StopIssueProgress
-        stop(cmd)
+        stop(cmd.id)
       end
     rescue Issue::InvalidTransition
       raise Error
     end
 
-    def create(cmd)
-      with_issue(cmd.id) { |issue| issue.create(cmd.id) }
+    def create(id)
+      with_issue(id) { |issue| issue.create(id) }
     end
 
-    def resolve(cmd)
-      with_issue(cmd.id) { |issue| issue.resolve }
+    def resolve(id)
+      with_issue(id) { |issue| issue.resolve }
     end
 
-    def close(cmd)
-      with_issue(cmd.id) { |issue| issue.close }
+    def close(id)
+      with_issue(id) { |issue| issue.close }
     end
 
-    def reopen(cmd)
-      with_issue(cmd.id) { |issue| issue.reopen }
+    def reopen(id)
+      with_issue(id) { |issue| issue.reopen }
     end
 
-    def start(cmd)
-      with_issue(cmd.id) { |issue| issue.start }
+    def start(id)
+      with_issue(id) { |issue| issue.start }
     end
 
-    def stop(cmd)
-      with_issue(cmd.id) { |issue| issue.stop }
+    def stop(id)
+      with_issue(id) { |issue| issue.stop }
     end
 
     private
