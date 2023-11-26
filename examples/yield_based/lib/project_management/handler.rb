@@ -51,11 +51,9 @@ module ProjectManagement
 
     private
 
-    attr_reader :repository
-
     def with_issue(id)
       stream = "Issue$#{id}"
-      repository.with_aggregate(Issue.new, stream) do |issue, store|
+      @repository.with_aggregate(Issue.new, stream) do |issue, store|
         yield issue, store
       end
     end

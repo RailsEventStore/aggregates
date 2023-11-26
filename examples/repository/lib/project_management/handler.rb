@@ -49,13 +49,11 @@ module ProjectManagement
 
     private
 
-    attr_reader :repository
-
     def with_aggregate(id)
       events = @repository.load(id)
       issue = Issue.load(id, events)
       yield issue
-      repository.save(id, issue.changes)
+      @repository.save(id, issue.changes)
     end
   end
 end
