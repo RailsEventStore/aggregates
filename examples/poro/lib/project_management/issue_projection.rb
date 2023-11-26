@@ -14,7 +14,10 @@ module ProjectManagement
         .when(IssueReopened, ->(state, _) { state.status = :reopened })
         .when(IssueClosed, ->(state, _) { state.status = :closed })
         .when(IssueResolved, ->(state, _) { state.status = :resolved })
-        .when(IssueProgressStarted, ->(state, _) { state.status = :in_progress })
+        .when(
+          IssueProgressStarted,
+          ->(state, _) { state.status = :in_progress }
+        )
         .when(IssueProgressStopped, ->(state, _) { state.status = :open })
         .run(@event_store)
     end

@@ -19,7 +19,9 @@ module ProjectManagement
       when StopIssueProgress
         stop(cmd)
       end
-    rescue AASM::InvalidTransition, ActiveRecord::RecordNotFound, ActiveRecord::RecordNotUnique
+    rescue AASM::InvalidTransition,
+           ActiveRecord::RecordNotFound,
+           ActiveRecord::RecordNotUnique
       raise Error
     end
 
