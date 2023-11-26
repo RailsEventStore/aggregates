@@ -19,6 +19,8 @@ module ProjectManagement
       when StopIssueProgress
         stop(cmd)
       end
+    rescue AASM::InvalidTransition, ActiveRecord::RecordNotFound, ActiveRecord::RecordNotUnique
+      raise Error
     end
 
     def create(cmd)
@@ -67,16 +69,12 @@ module ProjectManagement
     def create_issue(id)
       Issue.create!(uuid: id)
       @event_store.append(yield, stream_name: stream_name(id))
-    rescue ActiveRecord::RecordNotUnique
-      raise Error
     end
 
     def load_issue(id)
       issue = Issue.find_by!(uuid: id)
       @event_store.append(yield(issue), stream_name: stream_name(id))
       issue.save!
-    rescue AASM::InvalidTransition, ActiveRecord::RecordNotFound
-      raise Error
     end
   end
 end
