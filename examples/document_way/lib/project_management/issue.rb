@@ -1,27 +1,5 @@
 module ProjectManagement
   class Issue
-    State = Struct.new(:id, :status)
-
-    class Repository
-      class Record < ActiveRecord::Base
-        self.table_name = :issues
-      end
-      private_constant :Record
-
-      def initialize(id)
-        @id = id
-      end
-
-      def store(state)
-        Record.where(uuid: @id).update_all(status: state.status)
-      end
-
-      def load
-        record = Record.find_or_create_by(uuid: @id)
-        State.new(record.uuid, record.status)
-      end
-    end
-
     InvalidTransition = Class.new(StandardError)
 
     attr_reader :state

@@ -35,7 +35,7 @@ module ProjectManagement
     def stream_name(id) = "Issue$#{id}"
 
     def with_aggregate(id)
-      repository = Issue::Repository.new(id)
+      repository = Repository.new(id)
       issue = Issue.new(repository.load)
 
       @event_store.append(yield(issue), stream_name: stream_name(id))
