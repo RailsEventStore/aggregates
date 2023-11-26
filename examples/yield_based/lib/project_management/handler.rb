@@ -1,7 +1,7 @@
 module ProjectManagement
   class Handler
     def initialize(event_store)
-      @repo = AggregateRepository.new(event_store)
+      @repository = AggregateRepository.new(event_store)
     end
 
     def call(cmd)
@@ -51,11 +51,11 @@ module ProjectManagement
 
     private
 
-    attr_reader :repo
+    attr_reader :repository
 
     def with_issue(id)
       stream = "Issue$#{id}"
-      repo.with_aggregate(Issue.new, stream) do |issue, store|
+      repository.with_aggregate(Issue.new, stream) do |issue, store|
         yield issue, store
       end
     end
