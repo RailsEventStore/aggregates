@@ -8,9 +8,11 @@ matcher:
   subjects:
     - ProjectManagement*
   ignore:
+    - ProjectManagement::Test*
     - ProjectManagement::Issue#open
     - ProjectManagement::Open*
     - ProjectManagement::InProgress*
     - ProjectManagement::Resolved*
     - ProjectManagement::Closed*
-    - ProjectManagement::Test*
+coverage_criteria:
+  process_abort: true

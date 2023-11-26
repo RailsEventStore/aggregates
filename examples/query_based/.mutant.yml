@@ -9,4 +9,5 @@ matcher:
     - ProjectManagement*
   ignore:
     - ProjectManagement::Test*
-    - ProjectManagement::IssueProjection#call
+coverage_criteria:
+  process_abort: true

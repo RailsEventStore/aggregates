@@ -8,5 +8,7 @@ matcher:
   subjects:
     - ProjectManagement*
   ignore:
-    - ProjectManagement::UI*
     - ProjectManagement::Test*
+    - ProjectManagement::UI*
+coverage_criteria:
+  process_abort: true

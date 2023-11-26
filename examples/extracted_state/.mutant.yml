@@ -8,6 +8,6 @@ matcher:
   subjects:
     - ProjectManagement*
   ignore:
-    - ProjectManagement::Issue#apply_on_state
-    - ProjectManagement::Issue#apply
     - ProjectManagement::Test*
+coverage_criteria:
+  process_abort: true

@@ -1,13 +1,13 @@
 integration:
   name: minitest
 includes:
-- lib
+  - lib
 requires:
-- project_management
+  - project_management
 matcher:
   subjects:
-  - ProjectManagement*
+    - ProjectManagement*
   ignore:
     - ProjectManagement::Test*
-    - ProjectManagement::CommandHandler#load_issue
-    - ProjectManagement::CommandHandler#create_issue
+coverage_criteria:
+  process_abort: true
