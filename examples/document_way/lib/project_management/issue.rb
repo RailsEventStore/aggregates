@@ -8,9 +8,13 @@ module ProjectManagement
       end
       private_constant :Record
 
-      def initialize(id) = @id = id
+      def initialize(id)
+        @id = id
+      end
 
-      def store(state) = Record.where(uuid: @id).update(status: state.status)
+      def store(state)
+        Record.where(uuid: @id).update_all(status: state.status)
+      end
 
       def load
         record = Record.find_or_create_by(uuid: @id)
