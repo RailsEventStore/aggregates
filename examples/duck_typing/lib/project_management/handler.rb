@@ -1,7 +1,7 @@
 module ProjectManagement
   class Handler
     def initialize(event_store)
-      @event_store = event_store
+      @repository = Repository.new(event_store)
     end
 
     def call(cmd)
@@ -67,31 +67,10 @@ module ProjectManagement
 
     private
 
-    def stream_name(id) = "Issue$#{id}"
-
     def load_issue(id)
-      issue =
-        @event_store
-          .read
-          .stream(stream_name(id))
-          .reduce(Issue.new) do |issue, event|
-            case event
-            when IssueOpened
-              issue.open
-            when IssueProgressStarted
-              issue.start
-            when IssueProgressStopped
-              issue.stop
-            when IssueResolved
-              issue.resolve
-            when IssueReopened
-              issue.reopen
-            when IssueClosed
-              issue.close
-            end
-          end
-
-      @event_store.append(yield(issue), stream_name: stream_name(id))
+      issue = @repository.load(id, Issue.new)
+      events = yield(issue)
+      @repository.store(id, events)
     end
   end
 end
