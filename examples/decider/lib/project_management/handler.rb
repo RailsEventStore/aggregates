@@ -8,11 +8,11 @@ module ProjectManagement
     def call(cmd)
       state = @repository.load(cmd.id, @decider)
 
-      case result = @decider.decide(cmd, state)
-      when StandardError
+      case @decider.decide(cmd, state)
+      in StandardError
         raise Error
-      else
-        @repository.store(cmd.id, result)
+      in Event => event
+        @repository.store(cmd.id, event)
       end
     end
   end
