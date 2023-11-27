@@ -1,29 +1,19 @@
 module ProjectManagement
   class Handler
     def initialize(event_store)
-      @event_store = event_store
       @decider = Issue
+      @repository = Repository.new(event_store)
     end
 
     def call(cmd)
-      state =
-        @event_store
-          .read
-          .stream(stream_name(cmd.id))
-          .reduce(@decider.initial_state(cmd.id)) do |state, event|
-            @decider.evolve(state, event)
-          end
+      state = @repository.load(cmd.id, @decider)
 
       case result = @decider.decide(cmd, state)
       when StandardError
         raise Error
       else
-        @event_store.append(result, stream_name: stream_name(cmd.id))
+        @repository.store(cmd.id, result)
       end
     end
-
-    private
-
-    def stream_name(id) = "Issue$#{id}"
   end
 end
