@@ -37,11 +37,11 @@ module ProjectManagement
           .stream(stream_name(id))
           .reduce(IssueState.initial(id)) { |state, event| state.apply(event) }
 
-      case result = yield(state)
-      when Issue::InvalidTransition
+      case yield(state)
+      in StandardError
         raise Error
-      else
-        @event_store.append(result, stream_name: stream_name(id))
+      in Event => event
+        @event_store.append(event, stream_name: stream_name(id))
       end
     end
   end
