@@ -1,7 +1,7 @@
 module ProjectManagement
   class Handler
     def initialize(event_store)
-      @event_store = event_store
+      @repository = Repository.new(event_store)
     end
 
     def call(cmd)
@@ -65,13 +65,10 @@ module ProjectManagement
 
     private
 
-    def stream_name(id) = "Issue$#{id}"
-
     def with_aggregate(id)
-      issue =
-        IssueProjection.new(@event_store).call(Issue.initial, stream_name(id))
-
-      @event_store.append(yield(issue), stream_name: stream_name(id))
+      issue = @repository.load(id, Issue.initial)
+      events = yield(issue)
+      @repository.store(id, events)
     end
   end
 end
