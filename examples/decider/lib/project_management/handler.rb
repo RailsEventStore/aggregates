@@ -9,9 +9,9 @@ module ProjectManagement
       state = @repository.load(cmd.id, @decider)
 
       case @decider.decide(cmd, state)
-      in StandardError
+      in [StandardError]
         raise Error
-      in Event => event
+      in [Event => event]
         @repository.store(cmd.id, event)
       end
     end
