@@ -26,27 +26,27 @@ module ProjectManagement
     end
 
     def create(id)
-      with_issue(id) { |issue, store| issue.create(id) { |ev| store.(ev) } }
+      with_issue(id) { |issue, store| issue.create(id) { |ev| store.call(ev) } }
     end
 
     def resolve(id)
-      with_issue(id) { |issue, store| issue.resolve { |ev| store.(ev) } }
+      with_issue(id) { |issue, store| issue.resolve { |ev| store.call(ev) } }
     end
 
     def close(id)
-      with_issue(id) { |issue, store| issue.close { |ev| store.(ev) } }
+      with_issue(id) { |issue, store| issue.close { |ev| store.call(ev) } }
     end
 
     def reopen(id)
-      with_issue(id) { |issue, store| issue.reopen { |ev| store.(ev) } }
+      with_issue(id) { |issue, store| issue.reopen { |ev| store.call(ev) } }
     end
 
     def start(id)
-      with_issue(id) { |issue, store| issue.start { |ev| store.(ev) } }
+      with_issue(id) { |issue, store| issue.start { |ev| store.call(ev) } }
     end
 
     def stop(id)
-      with_issue(id) { |issue, store| issue.stop { |ev| store.(ev) } }
+      with_issue(id) { |issue, store| issue.stop { |ev| store.call(ev) } }
     end
 
     private
