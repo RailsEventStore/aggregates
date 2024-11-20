@@ -50,11 +50,11 @@ module ProjectManagement
 
     def fail = raise InvalidTransition
 
-    on(IssueOpened) { |event| @status = :open }
-    on(IssueResolved) { |event| @status = :resolved }
-    on(IssueClosed) { |event| @status = :closed }
-    on(IssueReopened) { |event| @status = :reopened }
-    on(IssueProgressStarted) { |event| @status = :in_progress }
-    on(IssueProgressStopped) { |event| @status = :open }
+    on(IssueOpened) { |_event| @status = :open }
+    on(IssueResolved) { |_event| @status = :resolved }
+    on(IssueClosed) { |_event| @status = :closed }
+    on(IssueReopened) { |_event| @status = :reopened }
+    on(IssueProgressStarted) { |_event| @status = :in_progress }
+    on(IssueProgressStopped) { |_event| @status = :open }
   end
 end

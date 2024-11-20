@@ -4,30 +4,29 @@ module ProjectManagement
   class IssueState < Struct.new(:id, :status)
     include AggregateState
 
-    private
 
     on IssueOpened do |ev|
       self.id = ev.data.fetch(:issue_id)
       self.status = :open
     end
 
-    on IssueResolved do |ev|
+    on IssueResolved do |_ev|
       self.status = :resolved
     end
 
-    on IssueClosed do |ev|
+    on IssueClosed do |_ev|
       self.status = :closed
     end
 
-    on IssueReopened do |ev|
+    on IssueReopened do |_ev|
       self.status = :reopened
     end
 
-    on IssueProgressStarted do |ev|
+    on IssueProgressStarted do |_ev|
       self.status = :in_progress
     end
 
-    on IssueProgressStopped do |ev|
+    on IssueProgressStopped do |_ev|
       self.status = :open
     end
   end

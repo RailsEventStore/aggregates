@@ -90,23 +90,23 @@ module ProjectManagement
       @status = :open
     end
 
-    on IssueResolved do |ev|
+    on IssueResolved do |_ev|
       @status = :resolved
     end
 
-    on IssueClosed do |ev|
+    on IssueClosed do |_ev|
       @status = :closed
     end
 
-    on IssueReopened do |ev|
+    on IssueReopened do |_ev|
       @status = :reopened
     end
 
-    on IssueProgressStarted do |ev|
+    on IssueProgressStarted do |_ev|
       @status = :in_progress
     end
 
-    on IssueProgressStopped do |ev|
+    on IssueProgressStopped do |_ev|
       @status = :open
     end
   end
