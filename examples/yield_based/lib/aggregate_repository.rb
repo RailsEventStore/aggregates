@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class AggregateRepository
   def initialize(event_store)
     @event_store = event_store

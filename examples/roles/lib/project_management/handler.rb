@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ProjectManagement
   class Handler
     def initialize(event_store)
@@ -75,24 +76,24 @@ module ProjectManagement
     def load_issue(id)
       issue =
         @event_store
-          .read
-          .stream(stream_name(id))
-          .reduce(Issue.new) do |issue, event|
-            case event
-            when IssueOpened
-              issue.open
-            when IssueProgressStarted
-              issue.start
-            when IssueProgressStopped
-              issue.stop
-            when IssueResolved
-              issue.resolve
-            when IssueReopened
-              issue.reopen
-            when IssueClosed
-              issue.close
-            end
+        .read
+        .stream(stream_name(id))
+        .reduce(Issue.new) do |issue, event|
+          case event
+          when IssueOpened
+            issue.open
+          when IssueProgressStarted
+            issue.start
+          when IssueProgressStopped
+            issue.stop
+          when IssueResolved
+            issue.resolve
+          when IssueReopened
+            issue.reopen
+          when IssueClosed
+            issue.close
           end
+        end
 
       @event_store.append(yield(issue), stream_name: stream_name(id))
     end

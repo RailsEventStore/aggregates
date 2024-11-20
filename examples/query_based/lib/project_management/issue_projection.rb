@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ProjectManagement
   class IssueProjection
     def self.call(query, initial_issue)

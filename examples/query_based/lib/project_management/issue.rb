@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ProjectManagement
   Issue =
     Data.define(:status) do

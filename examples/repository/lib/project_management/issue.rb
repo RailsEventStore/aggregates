@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ProjectManagement
   class Issue
     InvalidTransition = Class.new(StandardError)

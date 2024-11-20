@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ProjectManagement
   class Handler
     def initialize(event_store)

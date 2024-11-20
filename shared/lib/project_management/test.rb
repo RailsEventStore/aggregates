@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ProjectManagement
   module Test
     def self.with(handler:, event_store:)

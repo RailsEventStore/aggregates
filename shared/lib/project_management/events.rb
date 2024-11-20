@@ -1,9 +1,11 @@
 # frozen_string_literal: true
+
 module ProjectManagement
   Event =
     Data.define(:event_id, :data, :metadata) do
       def initialize(event_id: SecureRandom.uuid, data: {}, metadata: {}) =
         super(event_id: event_id, data: data, metadata: metadata)
+
       def event_type = self.class.name
     end
 

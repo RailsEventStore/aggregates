@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ProjectManagement
   class Handler
     def initialize(event_store)
@@ -25,6 +26,7 @@ module ProjectManagement
     def create(id)
       with_aggregate(id) do |issue|
         raise Error unless issue.can_create?
+
         IssueOpened.new(data: { issue_id: id })
       end
     end
@@ -32,6 +34,7 @@ module ProjectManagement
     def resolve(id)
       with_aggregate(id) do |issue|
         raise Error unless issue.can_resolve?
+
         IssueResolved.new(data: { issue_id: id })
       end
     end
@@ -39,6 +42,7 @@ module ProjectManagement
     def close(id)
       with_aggregate(id) do |issue|
         raise Error unless issue.can_close?
+
         IssueClosed.new(data: { issue_id: id })
       end
     end
@@ -46,6 +50,7 @@ module ProjectManagement
     def reopen(id)
       with_aggregate(id) do |issue|
         raise Error unless issue.can_reopen?
+
         IssueReopened.new(data: { issue_id: id })
       end
     end
@@ -53,6 +58,7 @@ module ProjectManagement
     def start(id)
       with_aggregate(id) do |issue|
         raise Error unless issue.can_start?
+
         IssueProgressStarted.new(data: { issue_id: id })
       end
     end
@@ -60,6 +66,7 @@ module ProjectManagement
     def stop(id)
       with_aggregate(id) do |issue|
         raise Error unless issue.can_stop?
+
         IssueProgressStopped.new(data: { issue_id: id })
       end
     end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module ProjectManagement
   class IssueState < Struct.new(:id, :status)
     include AggregateState
