@@ -5,19 +5,21 @@ module ProjectManagement
 
     class << self
       def decide(command, state)
-        case command
-        when CreateIssue
-          open(state)
-        when ResolveIssue
-          resolve(state)
-        when CloseIssue
-          close(state)
-        when ReopenIssue
-          reopen(state)
-        when StartIssueProgress
-          start(state)
-        when StopIssueProgress
-          stop(state)
+        case [command, state]
+        in [CreateIssue, State(id:, status: nil)]
+          [IssueOpened.new(data: { issue_id: id })]
+        in [ResolveIssue, State(id:, status: :open | :in_progress | :reopened)]
+          [IssueResolved.new(data: { issue_id: id })]
+        in [CloseIssue, State(id:, status: :open | :in_progress | :resolved | :reopened)]
+          [IssueClosed.new(data: { issue_id: id })]
+        in [ReopenIssue, State(id:, status: :resolved | :closed)]
+          [IssueReopened.new(data: { issue_id: id })]
+        in [StartIssueProgress, State(id:, status: :open | :reopened)]
+          [IssueProgressStarted.new(data: { issue_id: id })]
+        in [StopIssueProgress, State(id:, status: :in_progress)]
+          [IssueProgressStopped.new(data: { issue_id: id })]
+        else
+          [InvalidTransition.new]
         end
       end
 
@@ -40,56 +42,6 @@ module ProjectManagement
 
       def initial_state(id)
         State.new(id: id, status: nil)
-      end
-
-      private
-
-      def open(state)
-        if state.status
-          InvalidTransition.new
-        else
-          IssueOpened.new(data: { issue_id: state.id })
-        end
-      end
-
-      def resolve(state)
-        if %i[open in_progress reopened].include? state.status
-          IssueResolved.new(data: { issue_id: state.id })
-        else
-          InvalidTransition.new
-        end
-      end
-
-      def close(state)
-        if %i[open in_progress resolved reopened].include? state.status
-          IssueClosed.new(data: { issue_id: state.id })
-        else
-          InvalidTransition.new
-        end
-      end
-
-      def reopen(state)
-        if %i[resolved closed].include? state.status
-          IssueReopened.new(data: { issue_id: state.id })
-        else
-          InvalidTransition.new
-        end
-      end
-
-      def stop(state)
-        if %i[in_progress].include? state.status
-          IssueProgressStopped.new(data: { issue_id: state.id })
-        else
-          InvalidTransition.new
-        end
-      end
-
-      def start(state)
-        if %i[open reopened].include? state.status
-          IssueProgressStarted.new(data: { issue_id: state.id })
-        else
-          InvalidTransition.new
-        end
       end
     end
   end
