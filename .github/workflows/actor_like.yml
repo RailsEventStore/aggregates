@@ -18,7 +18,7 @@ jobs:
         working-directory: ${{ env.WORKING_DIRECTORY }}
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.2
+          ruby-version: 3.3.6
           bundler-cache: true
           working-directory: ${{ env.WORKING_DIRECTORY }}
       - run: make test
@@ -34,7 +34,7 @@ jobs:
         working-directory: ${{ env.WORKING_DIRECTORY }}
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.2
+          ruby-version: 3.3.6
           bundler-cache: true
           working-directory: ${{ env.WORKING_DIRECTORY }}
       - run: make mutate
