@@ -52,8 +52,8 @@ GEM
     ruby_event_store (2.12.1)
       concurrent-ruby (~> 1.0, >= 1.1.6)
     sorbet-runtime (0.5.11089)
-    sqlite3 (1.6.8-arm64-darwin)
-    sqlite3 (1.6.8-x86_64-linux)
+    sqlite3 (1.7.3-arm64-darwin)
+    sqlite3 (1.7.3-x86_64-linux)
     timeout (0.4.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -72,7 +72,7 @@ DEPENDENCIES
   mutant-license!
   mutant-minitest
   ruby_event_store
-  sqlite3
+  sqlite3 (< 2)
 
 BUNDLED WITH
    2.4.21
