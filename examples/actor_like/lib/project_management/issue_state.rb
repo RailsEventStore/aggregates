@@ -4,7 +4,6 @@ module ProjectManagement
   class IssueState < Struct.new(:id, :status)
     include AggregateState
 
-
     on IssueOpened do |ev|
       self.id = ev.data.fetch(:issue_id)
       self.status = :open
