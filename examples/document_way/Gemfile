@@ -6,4 +6,3 @@ gem "mutant"
 gem "mutant-minitest"
 gem "activerecord", ">= 8"
 gem "sqlite3", ">= 2"
-
