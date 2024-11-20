@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module ProjectManagement
   Event =
     Data.define(:event_id, :data, :metadata) do

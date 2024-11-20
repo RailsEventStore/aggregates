@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative "../../../shared/lib/project_management"
 require_relative "aggregate_root"
 require_relative "aggregate_repository"

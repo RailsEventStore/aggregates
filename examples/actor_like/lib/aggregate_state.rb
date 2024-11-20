@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module AggregateState
   module ClassMethods
     def on(*event_klasses, &block)

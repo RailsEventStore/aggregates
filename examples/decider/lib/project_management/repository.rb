@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module ProjectManagement
   class Repository
     def initialize(event_store)

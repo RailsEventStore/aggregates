@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module ProjectManagement
   Command = Data.define(:id)
 
