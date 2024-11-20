@@ -37,4 +37,4 @@ DEPENDENCIES
   ruby_event_store
 
 BUNDLED WITH
-   2.4.21
+   2.5.23
