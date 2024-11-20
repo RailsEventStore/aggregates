@@ -12,3 +12,4 @@ matcher:
     - ProjectManagement::UI*
 coverage_criteria:
   process_abort: true
+usage: opensource

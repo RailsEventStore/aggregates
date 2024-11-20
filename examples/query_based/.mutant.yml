@@ -11,3 +11,4 @@ matcher:
     - ProjectManagement::Test*
 coverage_criteria:
   process_abort: true
+usage: opensource

@@ -16,3 +16,4 @@ matcher:
     - ProjectManagement::Closed*
 coverage_criteria:
   process_abort: true
+usage: opensource
