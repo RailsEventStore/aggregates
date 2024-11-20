@@ -4,6 +4,6 @@ gem "ruby_event_store"
 gem "minitest"
 gem "mutant"
 gem "mutant-minitest"
-gem "activerecord"
-gem "sqlite3", "< 2"
+gem "activerecord", ">= 8"
+gem "sqlite3", ">= 2"
 
