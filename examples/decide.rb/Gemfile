@@ -1,0 +1,9 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gem "ruby_event_store"
+gem "decide.rb", require: "decider"
+gem "minitest"
+gem "mutant"
+gem "mutant-minitest"

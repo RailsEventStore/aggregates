@@ -93,3 +93,18 @@ More: https://blog.arkency.com/make-your-ruby-code-more-modular-and-functional-w
 - aggregate not aware of events
 - aggregate object is still responsible for holding invariants
 - no id in domain class
+
+### Decider
+
+[source](examples/decider)
+
+- clear separation of state sourcing (with projection)
+- aggregate with decider pattern
+
+### Decider with decide.rb gem
+
+[source](examples/decide.rb)
+
+- clear separation of state sourcing (with projection) with expected version
+- aggregate with decider pattern and decide.rb DSL
+- mapping between infra (RES) events and domain events used inside decider

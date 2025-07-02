@@ -1,0 +1,14 @@
+integration:
+  name: minitest
+includes:
+  - lib
+requires:
+  - project_management
+matcher:
+  subjects:
+    - ProjectManagement*
+  ignore:
+    - ProjectManagement::Test*
+coverage_criteria:
+  process_abort: true
+usage: opensource
